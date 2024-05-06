@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
 * Студент: [Елена Волошина](https://up.htmlacademy.ru/ecmascript/23/user/1982411).
-* Наставник: `Неизвестно`.
+* Наставник: [Oleg Petrov] (https://htmlacademy.ru/profile/fyvfyv).
 
 ---
 
