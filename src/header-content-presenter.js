@@ -1,26 +1,22 @@
-import TripInfoView from './view/trip-info-view.js';
 import TripInfoMainView from './view/trip-info-main-view.js';
 import TripInfoCostView from './view/trip-info-cost-view.js';
 import FiltersView from './view/filters-view.js';
 import AddEventButtonView from './view/add-event-button-view.js';
-import TripControlsView from './view/trip-controls-view.js';
 
 import {render} from './render.js';
 
 export default class HeaderContentPresenter {
-  tripControlsComponent = new TripControlsView();
-  tripInfoComponent = new TripInfoView();
 
-  constructor({headerContentContainer}) {
+  constructor({headerContentContainer, tripInfoContainer, tripControlsFiltersContainer}) {
     this.headerContentContainer = headerContentContainer;
+    this.tripInfoContainer = tripInfoContainer;
+    this.tripControlsFiltersContainer = tripControlsFiltersContainer;
   }
 
   init() {
-    render(this.tripInfoComponent, this.headerContentContainer);
-    render(new TripInfoMainView(), this.tripInfoComponent.getElement());
-    render(new TripInfoCostView(), this.tripInfoComponent.getElement());
-    render(this.tripControlsComponent, this.headerContentContainer);
-    render(new FiltersView(), this.tripControlsComponent.getElement());
+    render(new TripInfoMainView(), this.tripInfoContainer);
+    render(new TripInfoCostView(), this.tripInfoContainer);
+    render(new FiltersView(), this.tripControlsFiltersContainer);
     render(new AddEventButtonView(), this.headerContentContainer);
   }
 }

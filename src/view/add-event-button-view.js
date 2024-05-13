@@ -1,12 +1,15 @@
 import {createElement} from '../render.js';
-import {createTemplate} from '../utils.js';
 
-const ADD_EVENT_BUTTON_MARKUP = `
-<button class="trip-main__event-add-btn  btn  btn--big  btn--yellow" type="button">New event</button>`;
+
+function createAddEventButtonTemplate() {
+  return `
+  <button class="trip-main__event-add-btn  btn  btn--big  btn--yellow" type="button">New event</button>
+  `;
+}
 
 export default class AddEventButtonView {
   getTemplate() {
-    return createTemplate(ADD_EVENT_BUTTON_MARKUP);
+    return createAddEventButtonTemplate();
   }
 
   getElement() {

@@ -1,12 +1,14 @@
 import {createElement} from '../render.js';
-import {createTemplate} from '../utils.js';
 
-const TRIP_EVENTS_LIST_MARKUP = `
-<ul class="trip-events__list"></ul>`;
+function createTripEventsListTemplate() {
+  return `
+  <ul class="trip-events__list"></ul>
+  `;
+}
 
 export default class TripEventsListView {
   getTemplate() {
-    return createTemplate(TRIP_EVENTS_LIST_MARKUP);
+    return createTripEventsListTemplate();
   }
 
   getElement() {
