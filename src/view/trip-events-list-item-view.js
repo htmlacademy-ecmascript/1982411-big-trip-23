@@ -3,11 +3,11 @@ import { getFormettedEventDate, getEventDurationTime, getTotalEventPrice } from 
 import { DATE_FORMAT } from '../const.js';
 
 
-function createTripEventsListItemOffersTemplate(offers) {
-  let offersTemplate = '';
-  if (offers) {
+function createTripEventsListItemOfferTemplate(offers) {
+  let offerTemplate = '';
+  if (offers && offers.length !== 0) {
     for (let i = 0; i < offers.length; i++) {
-      offersTemplate += `
+      offerTemplate += `
       <li class="event__offer">
          <span class="event__offer-title">${offers[i].title}</span>
            &plus;&euro;&nbsp;
@@ -16,7 +16,7 @@ function createTripEventsListItemOffersTemplate(offers) {
       `;
     }
   }
-  return offersTemplate;
+  return offerTemplate;
 }
 
 function createTripEventButtonFav(isFavorite) {
@@ -63,7 +63,7 @@ function createTripEventsListItemTemplate(event) {
     </p>
     <h4 class="visually-hidden">Offers:</h4>
     <ul class="event__selected-offers">
-      ${createTripEventsListItemOffersTemplate(selectedOffers)}
+      ${createTripEventsListItemOfferTemplate(selectedOffers)}
     </ul>
     ${createTripEventButtonFav(isFavorite)}
     <button class="event__rollup-btn" type="button">

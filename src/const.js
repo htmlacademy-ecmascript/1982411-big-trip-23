@@ -1,4 +1,4 @@
-const EVENTS_COUNT = 3;
+const EVENTS_COUNT = 4;
 
 const EVENT_TYPES = [
   'Taxi',
@@ -25,4 +25,27 @@ const DATE_FORMAT = {
 const HOURS = 24;
 const MINUTES = 60;
 
-export { EVENTS_COUNT, EVENT_TYPES, DATE_FORMAT, HOURS, MINUTES};
+const NEW_EVENT_INFO = {
+  eventData: {
+    'id': '',
+    'basePrice': 0,
+    'dateFrom': '',
+    'dateTo': '',
+    'destination': '',
+    'isFavorite': false,
+    'offers': [],
+    'type': 'flight'
+  },
+  city: {
+    id: '',
+    description: '',
+    name: '',
+    pictures: [],
+  },
+  selectedOffers: [],
+  offers: [],
+  citiesList: [],
+  offersList: []
+};
+
+export { EVENTS_COUNT, EVENT_TYPES, DATE_FORMAT, HOURS, MINUTES, NEW_EVENT_INFO};
