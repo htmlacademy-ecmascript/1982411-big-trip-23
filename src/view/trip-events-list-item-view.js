@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { getFormattedEventDate, getEventDurationTime, getTotalEventPrice } from '../utils.js';
 import { DATE_FORMAT } from '../const.js';
 
@@ -77,24 +77,15 @@ function createTripEventsListItemTemplate(event) {
   `;
 }
 
-export default class TripEventsListItemView {
+export default class TripEventsListItemView extends AbstractView {
+  #event = null;
+
   constructor({event}) {
-    this.event = event;
+    super();
+    this.#event = event;
   }
 
-  getTemplate() {
-    return createTripEventsListItemTemplate(this.event);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+  get template() {
+    return createTripEventsListItemTemplate(this.#event);
   }
 }

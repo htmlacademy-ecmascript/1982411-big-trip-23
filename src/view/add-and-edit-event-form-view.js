@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { getFormattedEventDate, getTotalEventPrice } from '../utils.js';
 import { DATE_FORMAT, EVENT_TYPES } from '../const.js';
 
@@ -178,24 +178,15 @@ function createAddAndEditEventFormTemplate(event, isEditEventForm = false) {
   `;
 }
 
-export default class AddAndEditEventFormView {
+export default class AddAndEditEventFormView extends AbstractView {
+  #event = null;
+
   constructor({event}) {
-    this.event = event;
+    super();
+    this.#event = event;
   }
 
-  getTemplate() {
-    return createAddAndEditEventFormTemplate(this.event);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+  get template() {
+    return createAddAndEditEventFormTemplate(this.#event);
   }
 }
