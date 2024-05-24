@@ -1,5 +1,5 @@
 import {createElement} from '../render.js';
-import { getFormettedEventDate, getTotalEventPrice } from '../utils.js';
+import { getFormattedEventDate, getTotalEventPrice } from '../utils.js';
 import { DATE_FORMAT, EVENT_TYPES } from '../const.js';
 
 function createDestinationTemplate(citiesList) {
@@ -10,6 +10,18 @@ function createDestinationTemplate(citiesList) {
     }
   }
   return destinationTemplate;
+}
+
+function createOpenEventButton(isEditEventForm) {
+  let openEventButtonTemplete = '';
+  if (isEditEventForm) {
+    openEventButtonTemplete += `
+    <button class="event__rollup-btn" type="button">
+      <span class="visually-hidden">Open event</span>
+    </button>
+    `;
+  }
+  return openEventButtonTemplete;
 }
 
 function createEventTypeItemTemplate(eventTypesList, selectedEeventType) {
@@ -28,44 +40,85 @@ function createEventTypeItemTemplate(eventTypesList, selectedEeventType) {
 
 function createOfferTemplate(offers, selectedOffers) {
   let offerTemplate = '';
-  if (offers && offers.length !== 0) {
-    const selectedOffersSet = new Set(selectedOffers.map((offer) => offer.id));
+  const selectedOffersSet = new Set(selectedOffers.map((offer) => offer.id));
 
-    for (let i = 0; i < offers.length; i++) {
-      const selectedOfferAttribute = selectedOffersSet.has(offers[i].id) ? 'checked' : '';
-      offerTemplate += `
-        <div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-offer${i}-1" type="checkbox" name="event-offer-offer${i}" ${selectedOfferAttribute}>
-          <label class="event__offer-label" for="event-offer-offer${i}-1">
-            <span class="event__offer-title">${offers[i].title}</span>
-            &plus;&euro;&nbsp;
-            <span class="event__offer-price">${offers[i].price}</span>
-          </label>
-        </div>
+  for (let i = 0; i < offers.length; i++) {
+    const selectedOfferAttribute = selectedOffersSet.has(offers[i].id) ? 'checked' : '';
+    offerTemplate += `
+      <div class="event__offer-selector">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-offer${i}-1" type="checkbox" name="event-offer-offer${i}" ${selectedOfferAttribute}>
+        <label class="event__offer-label" for="event-offer-offer${i}-1">
+          <span class="event__offer-title">${offers[i].title}</span>
+          &plus;&euro;&nbsp;
+          <span class="event__offer-price">${offers[i].price}</span>
+        </label>
+      </div>
       `;
-    }
   }
   return offerTemplate;
 }
 
+function createOffersBlockTemplate(offers, selectedOffers) {
+  let offersBlockTemplate = '';
+  if (offers && offers.length !== 0) {
+    offersBlockTemplate += `
+    <section class="event__section  event__section--offers">
+      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+
+      <div class="event__available-offers">
+        ${createOfferTemplate(offers, selectedOffers)}
+      </div>
+    </section>
+    `;
+  }
+  return offersBlockTemplate;
+}
+
+function createDestinationBlockTemplate(cityName, cityDescription, isEditEventForm, pictures) {
+  let destinationBlockTemplate = '';
+  if (cityName && cityName !== '') {
+    destinationBlockTemplate += `
+    <section class="event__section  event__section--destination">
+        <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+        <p class="event__destination-description">${cityDescription}</p>
+        ${createPhotosBlockTemplate(isEditEventForm, pictures)}
+    </section>
+    `;
+  }
+  return destinationBlockTemplate;
+}
+
 function createImageTemplate(pictures) {
   let imageTemplate = '';
-  if (pictures && pictures.length !== 0) {
-    for (let i = 0; i < pictures.length; i++) {
-      imageTemplate += `<img class="event__photo" src="${pictures[i].src}" alt="${pictures[i].description}">`;
-    }
+  for (let i = 0; i < pictures.length; i++) {
+    imageTemplate += `<img class="event__photo" src="${pictures[i].src}" alt="${pictures[i].description}">`;
   }
+
   return imageTemplate;
 }
 
-function createAddEventFormTemplate(event) {
-  const {eventData: { basePrice, dateFrom, dateTo, type, }, city: { name: cityName, description: cityDescription, pictures}, selectedOffers, offers, citiesList } = event;
-  const startDate = getFormettedEventDate(dateFrom, DATE_FORMAT.INPUT_DATE_FORMAT);
-  const endDate = getFormettedEventDate(dateTo, DATE_FORMAT.INPUT_DATE_FORMAT);
+function createPhotosBlockTemplate(isEditEventForm, pictures) {
+  let photosBlockTemplate = '';
+  if (!isEditEventForm && (pictures && pictures.length !== 0)) {
+    photosBlockTemplate += `
+    <div class="event__photos-container">
+      <div class="event__photos-tape">
+        ${createImageTemplate(pictures)}
+      </div>
+    </div>
+    `;
+  }
+  return photosBlockTemplate;
+}
+
+function createAddAndEditEventFormTemplate(event, isEditEventForm = false) {
+  const { basePrice, dateFrom, dateTo, type } = event.eventData;
+  const { name: cityName, description: cityDescription, pictures } = event.city;
+  const { selectedOffers, offers, citiesList } = event;
+
+  const startDate = getFormattedEventDate(dateFrom, DATE_FORMAT.INPUT_DATE_FORMAT);
+  const endDate = getFormattedEventDate(dateTo, DATE_FORMAT.INPUT_DATE_FORMAT);
   const totalPrice = getTotalEventPrice(basePrice, selectedOffers);
-  const hideOffersClass = !offers || offers.length === 0 ? 'hide' : '';
-  const hideDestinationClass = !cityName ? 'hide' : '';
-  const hidePhotosClass = !pictures || pictures.length === 0 ? 'hide' : '';
 
   return `
   <li class="trip-events__item">
@@ -88,7 +141,7 @@ function createAddEventFormTemplate(event) {
 
       <div class="event__field-group  event__field-group--destination">
         <label class="event__label  event__type-output" for="event-destination-1">
-        ${type}
+          ${type}
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${cityName}" list="destination-list-1">
         <datalist id="destination-list-1">
@@ -114,39 +167,24 @@ function createAddEventFormTemplate(event) {
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
       <button class="event__reset-btn" type="reset">Cancel</button>
+      ${createOpenEventButton(isEditEventForm)}
     </header>
     <section class="event__details">
-      <section class="event__section  event__section--offers ${hideOffersClass}">
-        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-        <div class="event__available-offers">
-        ${createOfferTemplate(offers, selectedOffers)}
-        </div>
-      </section>
-
-      <section class="event__section  event__section--destination ${hideDestinationClass}">
-        <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-        <p class="event__destination-description">${cityDescription}</p>
-
-        <div class="event__photos-container ${hidePhotosClass}">
-          <div class="event__photos-tape">
-            ${createImageTemplate(pictures)}
-          </div>
-        </div>
-      </section>
+      ${createOffersBlockTemplate(offers, selectedOffers)}
+      ${createDestinationBlockTemplate(cityName, cityDescription, isEditEventForm, pictures)}
     </section>
   </form>
   </li>
   `;
 }
 
-export default class AddEventFormView {
+export default class AddAndEditEventFormView {
   constructor({event}) {
     this.event = event;
   }
 
   getTemplate() {
-    return createAddEventFormTemplate(this.event);
+    return createAddAndEditEventFormTemplate(this.event);
   }
 
   getElement() {
