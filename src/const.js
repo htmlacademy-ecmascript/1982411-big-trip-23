@@ -43,4 +43,10 @@ const NEW_EVENT_CITY = {
   pictures: [],
 };
 
-export { EVENTS_COUNT, EVENT_TYPES, DATE_FORMAT, HOURS, MINUTES, NEW_EVENT_INFO, NEW_EVENT_CITY};
+const MESSAGES = {
+  FAILED: 'Failed to load latest route information',
+  EMPTY: 'Click New Event to create your first point',
+  LOADING: 'Loading...'
+};
+
+export { EVENTS_COUNT, EVENT_TYPES, DATE_FORMAT, HOURS, MINUTES, NEW_EVENT_INFO, NEW_EVENT_CITY, MESSAGES};

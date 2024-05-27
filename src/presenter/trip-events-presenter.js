@@ -1,10 +1,11 @@
 import SortView from '../view/sort-view.js';
 import TripEventsListView from '../view/trip-events-list-view.js';
 import TripEventsListItemView from '../view/trip-events-list-item-view.js';
-// import AddAndEditEventFormView from '../view/add-and-edit-event-form-view.js';
-import { NEW_EVENT_CITY, NEW_EVENT_INFO } from '../const.js';
+import AddAndEditEventFormView from '../view/add-and-edit-event-form-view.js';
+import TripEventsMessageView from '../view/trip-events-message-view.js';
+import { NEW_EVENT_CITY, NEW_EVENT_INFO, MESSAGES } from '../const.js';
 
-import { render } from '../framework/render.js';
+import { render, replace } from '../framework/render.js';
 
 export default class TripEventsPresenter {
   #tripEventsContainer = null;
@@ -23,12 +24,8 @@ export default class TripEventsPresenter {
     this.#events = [...this.#eventsModel.events];
     this.#cities = [...this.#eventsModel.cities];
     this.#offers = [...this.#eventsModel.offers];
-    render(new SortView(), this.#tripEventsContainer);
-    render(this.#tripEventsListComponent, this.#tripEventsContainer);
-    const sortedEvents = this.#getSortedEvents(this.#events);
-    for (let i = 0; i < sortedEvents.length; i++) {
-      this.#renderEvent(this.#getEventInfo(sortedEvents[i]));
-    }
+
+    this.#renderEvents();
   }
 
   #getSortedEvents(events) {
@@ -59,7 +56,57 @@ export default class TripEventsPresenter {
   }
 
   #renderEvent(event) {
-    const eventComponent = new TripEventsListItemView({event});
+    const escKeyDownHandler = (evt) => {
+      if (evt.key === 'Escape') {
+        evt.preventDefault();
+        replaceFormToEventItem();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    };
+    const eventComponent = new TripEventsListItemView({
+      event,
+      onOpenEditFormClick: () => {
+        replaceEventItemToForm();
+        document.addEventListener('keydown', escKeyDownHandler);
+      }
+    });
+    const eventEditComponent = new AddAndEditEventFormView({
+      event,
+      onFormSubmit: () => {
+        replaceFormToEventItem();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      },
+      onFormClose: () => {
+        replaceFormToEventItem();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      },
+      isEditEventForm: true
+    });
+
+    function replaceEventItemToForm() {
+      replace(eventEditComponent, eventComponent);
+    }
+
+    function replaceFormToEventItem() {
+      replace(eventComponent, eventEditComponent);
+    }
+
     render(eventComponent, this.#tripEventsListComponent.element);
+  }
+
+  #renderEvents() {
+    if (!this.#events || this.#events.length === 0) {
+      render(this.#tripEventsListComponent, this.#tripEventsContainer);
+      render(new TripEventsMessageView({ message: MESSAGES.EMPTY }), this.#tripEventsListComponent.element);
+      return;
+    }
+
+    render(new SortView(), this.#tripEventsContainer);
+    render(this.#tripEventsListComponent, this.#tripEventsContainer);
+
+    const sortedEvents = this.#getSortedEvents(this.#events);
+    for (let i = 0; i < sortedEvents.length; i++) {
+      this.#renderEvent(this.#getEventInfo(sortedEvents[i]));
+    }
   }
 }

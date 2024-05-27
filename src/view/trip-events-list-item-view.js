@@ -33,7 +33,7 @@ function createTripEventButtonFav(isFavorite) {
 function createTripEventsListItemTemplate(event) {
   const { basePrice, dateFrom, dateTo, type, isFavorite } = event.eventData;
   const { name: cityName} = event.city;
-  const { selectedOffers } = event.eventData;
+  const { selectedOffers } = event;
 
   const startDate = getFormattedEventDate(dateFrom, DATE_FORMAT.EVENT_DATE_FORMAT);
   const startDateForAttribute = getFormattedEventDate(dateFrom, DATE_FORMAT.EVENT_DATE_ATTRIBUTE_FORMAT);
@@ -79,13 +79,22 @@ function createTripEventsListItemTemplate(event) {
 
 export default class TripEventsListItemView extends AbstractView {
   #event = null;
+  #handleOpenEditFormClick = null;
 
-  constructor({event}) {
+  constructor({event, onOpenEditFormClick}) {
     super();
     this.#event = event;
+    this.#handleOpenEditFormClick = onOpenEditFormClick;
+    this.element.querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#onOpenEditFormClickHandler);
   }
 
   get template() {
     return createTripEventsListItemTemplate(this.#event);
   }
+
+  #onOpenEditFormClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleOpenEditFormClick();
+  };
 }

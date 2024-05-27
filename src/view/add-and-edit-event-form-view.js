@@ -12,16 +12,16 @@ function createDestinationTemplate(citiesList) {
   return destinationTemplate;
 }
 
-function createOpenEventButton(isEditEventForm) {
-  let openEventButtonTemplete = '';
+function createCloseFormButton(isEditEventForm) {
+  let closeFormButtonTemplete = '';
   if (isEditEventForm) {
-    openEventButtonTemplete += `
+    closeFormButtonTemplete += `
     <button class="event__rollup-btn" type="button">
       <span class="visually-hidden">Open event</span>
     </button>
     `;
   }
-  return openEventButtonTemplete;
+  return closeFormButtonTemplete;
 }
 
 function createEventTypeItemTemplate(eventTypesList, selectedEeventType) {
@@ -166,8 +166,8 @@ function createAddAndEditEventFormTemplate(event, isEditEventForm = false) {
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-      <button class="event__reset-btn" type="reset">Cancel</button>
-      ${createOpenEventButton(isEditEventForm)}
+      <button class="event__reset-btn" type="reset">${isEditEventForm ? 'Delete' : 'Cancel'}</button>
+      ${createCloseFormButton(isEditEventForm)}
     </header>
     <section class="event__details">
       ${createOffersBlockTemplate(offers, selectedOffers)}
@@ -180,13 +180,37 @@ function createAddAndEditEventFormTemplate(event, isEditEventForm = false) {
 
 export default class AddAndEditEventFormView extends AbstractView {
   #event = null;
+  #handleFormSubmit = null;
+  #handleFormClose = null;
+  #isEditEventForm = false;
 
-  constructor({event}) {
+  constructor({event, onFormSubmit, onFormClose, isEditEventForm}) {
     super();
     this.#event = event;
+    this.#handleFormSubmit = onFormSubmit;
+    this.#handleFormClose = onFormClose;
+    this.#isEditEventForm = isEditEventForm;
+
+    this.element.querySelector('form')
+      .addEventListener('submit', this.#formSubmitHandler);
+
+    const closeFormButton = this.element.querySelector('.event__rollup-btn');
+    if (closeFormButton) {
+      closeFormButton.addEventListener('click', this.#formCloseHandler);
+    }
   }
 
   get template() {
-    return createAddAndEditEventFormTemplate(this.#event);
+    return createAddAndEditEventFormTemplate(this.#event, this.#isEditEventForm);
   }
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  };
+
+  #formCloseHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormClose();
+  };
 }
