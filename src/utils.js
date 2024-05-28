@@ -5,7 +5,7 @@ function getRandomArrayElement(items) {
   return items[Math.floor(Math.random() * items.length)];
 }
 
-function getFormettedEventDate(date, format) {
+function getFormattedEventDate(date, format) {
   return date ? dayjs(date).format(format) : '';
 }
 
@@ -39,4 +39,4 @@ function getTotalEventPrice(price, offers) {
   }
 }
 
-export { getRandomArrayElement, getFormettedEventDate, getEventDurationTime, getTotalEventPrice };
+export { getRandomArrayElement, getFormattedEventDate, getEventDurationTime, getTotalEventPrice };

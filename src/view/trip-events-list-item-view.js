@@ -1,5 +1,5 @@
-import { createElement } from '../render.js';
-import { getFormettedEventDate, getEventDurationTime, getTotalEventPrice } from '../utils.js';
+import AbstractView from '../framework/view/abstract-view.js';
+import { getFormattedEventDate, getEventDurationTime, getTotalEventPrice } from '../utils.js';
 import { DATE_FORMAT } from '../const.js';
 
 
@@ -31,13 +31,16 @@ function createTripEventButtonFav(isFavorite) {
 }
 
 function createTripEventsListItemTemplate(event) {
-  const {eventData: { basePrice, dateFrom, dateTo, type, isFavorite }, city: { name: cityName}, selectedOffers } = event;
-  const startDate = getFormettedEventDate(dateFrom, DATE_FORMAT.EVENT_DATE_FORMAT);
-  const startDateForAttribute = getFormettedEventDate(dateFrom, DATE_FORMAT.EVENT_DATE_ATTRIBUTE_FORMAT);
-  const startTime = getFormettedEventDate(dateFrom, DATE_FORMAT.EVENT_TIME_FORMAT);
-  const startTimeForAttribute = getFormettedEventDate(dateFrom, DATE_FORMAT.EVENT_DATETIME_ATTRIBUTE_FORMAT);
-  const endTime = getFormettedEventDate(dateTo, DATE_FORMAT.EVENT_TIME_FORMAT);
-  const endTimeForAttribute = getFormettedEventDate(dateTo, DATE_FORMAT.EVENT_DATETIME_ATTRIBUTE_FORMAT);
+  const { basePrice, dateFrom, dateTo, type, isFavorite } = event.eventData;
+  const { name: cityName} = event.city;
+  const { selectedOffers } = event;
+
+  const startDate = getFormattedEventDate(dateFrom, DATE_FORMAT.EVENT_DATE_FORMAT);
+  const startDateForAttribute = getFormattedEventDate(dateFrom, DATE_FORMAT.EVENT_DATE_ATTRIBUTE_FORMAT);
+  const startTime = getFormattedEventDate(dateFrom, DATE_FORMAT.EVENT_TIME_FORMAT);
+  const startTimeForAttribute = getFormattedEventDate(dateFrom, DATE_FORMAT.EVENT_DATETIME_ATTRIBUTE_FORMAT);
+  const endTime = getFormattedEventDate(dateTo, DATE_FORMAT.EVENT_TIME_FORMAT);
+  const endTimeForAttribute = getFormattedEventDate(dateTo, DATE_FORMAT.EVENT_DATETIME_ATTRIBUTE_FORMAT);
   const durationTime = getEventDurationTime(dateFrom, dateTo);
 
   const totalPrice = getTotalEventPrice(basePrice, selectedOffers);
@@ -74,24 +77,24 @@ function createTripEventsListItemTemplate(event) {
   `;
 }
 
-export default class TripEventsListItemView {
-  constructor({event}) {
-    this.event = event;
+export default class TripEventsListItemView extends AbstractView {
+  #event = null;
+  #handleOpenEditFormClick = null;
+
+  constructor({event, onOpenEditFormClick}) {
+    super();
+    this.#event = event;
+    this.#handleOpenEditFormClick = onOpenEditFormClick;
+    this.element.querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#onOpenEditFormClickHandler);
   }
 
-  getTemplate() {
-    return createTripEventsListItemTemplate(this.event);
+  get template() {
+    return createTripEventsListItemTemplate(this.#event);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #onOpenEditFormClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleOpenEditFormClick();
+  };
 }

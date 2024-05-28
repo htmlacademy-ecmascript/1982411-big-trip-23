@@ -26,26 +26,27 @@ const HOURS = 24;
 const MINUTES = 60;
 
 const NEW_EVENT_INFO = {
-  eventData: {
-    'id': '',
-    'basePrice': 0,
-    'dateFrom': '',
-    'dateTo': '',
-    'destination': '',
-    'isFavorite': false,
-    'offers': [],
-    'type': 'flight'
-  },
-  city: {
-    id: '',
-    description: '',
-    name: '',
-    pictures: [],
-  },
-  selectedOffers: [],
-  offers: [],
-  citiesList: [],
-  offersList: []
+  'id': '',
+  'basePrice': 0,
+  'dateFrom': '',
+  'dateTo': '',
+  'destination': '',
+  'isFavorite': false,
+  'offers': [],
+  'type': 'flight'
 };
 
-export { EVENTS_COUNT, EVENT_TYPES, DATE_FORMAT, HOURS, MINUTES, NEW_EVENT_INFO};
+const NEW_EVENT_CITY = {
+  id: '',
+  description: '',
+  name: '',
+  pictures: [],
+};
+
+const MESSAGES = {
+  FAILED: 'Failed to load latest route information',
+  EMPTY: 'Click New Event to create your first point',
+  LOADING: 'Loading...'
+};
+
+export { EVENTS_COUNT, EVENT_TYPES, DATE_FORMAT, HOURS, MINUTES, NEW_EVENT_INFO, NEW_EVENT_CITY, MESSAGES};
