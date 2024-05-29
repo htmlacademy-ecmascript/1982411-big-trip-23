@@ -1,9 +1,5 @@
 import dayjs from 'dayjs';
-import {HOURS, MINUTES } from './const';
-
-function getRandomArrayElement(items) {
-  return items[Math.floor(Math.random() * items.length)];
-}
+import {HOURS, MINUTES } from '../const';
 
 function getFormattedEventDate(date, format) {
   return date ? dayjs(date).format(format) : '';
@@ -39,4 +35,16 @@ function getTotalEventPrice(price, offers) {
   }
 }
 
-export { getRandomArrayElement, getFormattedEventDate, getEventDurationTime, getTotalEventPrice };
+function isFutureEvent(startDate) {
+  return startDate && dayjs().isAfter(startDate, 'D');
+}
+
+function isPresentEvent(startDate, endDate) {
+  return startDate && endDate && (dayjs().isBefore(startDate, 'D') || dayjs().isSame(startDate, 'D')) && (dayjs().isAfter(endDate, 'D') || dayjs().isSame(endDate, 'D'));
+}
+
+function isPastEvent(endDate) {
+  return endDate && dayjs().isBefore(endDate, 'D');
+}
+
+export { getFormattedEventDate, getEventDurationTime, getTotalEventPrice, isFutureEvent, isPresentEvent, isPastEvent };
