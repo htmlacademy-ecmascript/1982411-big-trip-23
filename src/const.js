@@ -45,7 +45,6 @@ const NEW_EVENT_CITY = {
 
 const MESSAGES = {
   FAILED: 'Failed to load latest route information',
-  EMPTY: 'Click New Event to create your first point',
   LOADING: 'Loading...'
 };
 
@@ -56,4 +55,11 @@ const FILTER_TYPE = {
   PAST: 'past',
 };
 
-export { EVENTS_COUNT, EVENT_TYPES, DATE_FORMAT, HOURS, MINUTES, NEW_EVENT_INFO, NEW_EVENT_CITY, MESSAGES, FILTER_TYPE};
+const FILTER_EMPTY_MESSAGES = {
+  [FILTER_TYPE.EVERYTHING]: 'Click New Event to create your first point',
+  [FILTER_TYPE.FUTURE]: 'There are no future events now',
+  [FILTER_TYPE.PRESENT]: 'There are no present events now',
+  [FILTER_TYPE.PAST]: 'There are no past events now',
+};
+
+export { EVENTS_COUNT, EVENT_TYPES, DATE_FORMAT, HOURS, MINUTES, NEW_EVENT_INFO, NEW_EVENT_CITY, MESSAGES, FILTER_TYPE, FILTER_EMPTY_MESSAGES};
