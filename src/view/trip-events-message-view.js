@@ -1,20 +1,34 @@
 import AbstractView from '../framework/view/abstract-view.js';
+import { FILTER_EMPTY_MESSAGES } from '../const';
 
-function createTripEventsMessageTemplate(message) {
+
+function createTripEventsMessageTemplate(data, isEventsListEmptyMessage) {
+  if (isEventsListEmptyMessage) {
+    return `
+      <p class="trip-events__msg">${FILTER_EMPTY_MESSAGES[data]}</p>
+    `;
+  }
   return `
-  <p class="trip-events__msg">${message}</p>
+    <p class="trip-events__msg">${data}</p>
   `;
 }
 
 export default class TripEventsMessageView extends AbstractView {
   #message = null;
+  #filterType = null;
+  #isEventsListEmptyMessage = false;
 
-  constructor({message}) {
+  constructor({message, filterType}) {
     super();
     this.#message = message;
+    this.#filterType = filterType;
   }
 
   get template() {
-    return createTripEventsMessageTemplate(this.#message);
+    if (this.#filterType) {
+      this.#isEventsListEmptyMessage = true;
+      return createTripEventsMessageTemplate(this.#filterType, this.#isEventsListEmptyMessage);
+    }
+    return createTripEventsMessageTemplate(this.#message, this.#isEventsListEmptyMessage);
   }
 }

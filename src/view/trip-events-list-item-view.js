@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { getFormattedEventDate, getEventDurationTime, getTotalEventPrice } from '../utils.js';
+import { getFormattedEventDate, getEventDurationTime, getTotalEventPrice } from '../utils/event.js';
 import { DATE_FORMAT } from '../const.js';
 
 

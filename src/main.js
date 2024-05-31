@@ -17,7 +17,8 @@ const eventsModel = new EventsModel();
 const headerContentPresenter = new HeaderContentPresenter({
   headerContentContainer: headerContentContainer,
   tripInfoContainer: tripInfoContainer,
-  tripControlsFiltersContainer: tripControlsFiltersContainer
+  tripControlsFiltersContainer: tripControlsFiltersContainer,
+  eventsModel
 });
 const tripEventsPresenter = new TripEventsPresenter({
   tripEventsContainer: tripEventsContainer,

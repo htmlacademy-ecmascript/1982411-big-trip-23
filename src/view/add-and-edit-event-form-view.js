@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { getFormattedEventDate, getTotalEventPrice } from '../utils.js';
+import { getFormattedEventDate, getTotalEventPrice } from '../utils/event.js';
 import { DATE_FORMAT, EVENT_TYPES } from '../const.js';
 
 function createDestinationTemplate(citiesList) {

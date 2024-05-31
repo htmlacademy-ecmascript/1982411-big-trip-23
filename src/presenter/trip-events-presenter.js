@@ -3,7 +3,7 @@ import TripEventsListView from '../view/trip-events-list-view.js';
 import TripEventsListItemView from '../view/trip-events-list-item-view.js';
 import AddAndEditEventFormView from '../view/add-and-edit-event-form-view.js';
 import TripEventsMessageView from '../view/trip-events-message-view.js';
-import { NEW_EVENT_CITY, NEW_EVENT_INFO, MESSAGES } from '../const.js';
+import { NEW_EVENT_CITY, NEW_EVENT_INFO, FILTER_TYPE } from '../const.js';
 
 import { render, replace } from '../framework/render.js';
 
@@ -97,7 +97,7 @@ export default class TripEventsPresenter {
   #renderEvents() {
     if (!this.#events || this.#events.length === 0) {
       render(this.#tripEventsListComponent, this.#tripEventsContainer);
-      render(new TripEventsMessageView({ message: MESSAGES.EMPTY }), this.#tripEventsListComponent.element);
+      render(new TripEventsMessageView({ filterType: FILTER_TYPE.EVERYTHING }), this.#tripEventsListComponent.element);
       return;
     }
 
