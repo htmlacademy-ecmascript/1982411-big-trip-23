@@ -1,6 +1,6 @@
 import {filter} from '../utils/filter.js';
 
-function generateFilter(events) {
+function generateFilters(events) {
   return Object.entries(filter).map(
     ([filterType, filterEvents]) => ({
       type: filterType,
@@ -9,4 +9,4 @@ function generateFilter(events) {
   );
 }
 
-export { generateFilter };
+export { generateFilters };

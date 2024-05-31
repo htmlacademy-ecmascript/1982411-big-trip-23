@@ -36,15 +36,15 @@ function getTotalEventPrice(price, offers) {
 }
 
 function isFutureEvent(startDate) {
-  return startDate && dayjs().isAfter(startDate, 'D');
+  return dayjs().isAfter(startDate, 'D');
 }
 
 function isPresentEvent(startDate, endDate) {
-  return startDate && endDate && (dayjs().isBefore(startDate, 'D') || dayjs().isSame(startDate, 'D')) && (dayjs().isAfter(endDate, 'D') || dayjs().isSame(endDate, 'D'));
+  return (dayjs().isBefore(startDate, 'D') || dayjs().isSame(startDate, 'D')) && (dayjs().isAfter(endDate, 'D') || dayjs().isSame(endDate, 'D'));
 }
 
 function isPastEvent(endDate) {
-  return endDate && dayjs().isBefore(endDate, 'D');
+  return dayjs().isBefore(endDate, 'D');
 }
 
 export { getFormattedEventDate, getEventDurationTime, getTotalEventPrice, isFutureEvent, isPresentEvent, isPastEvent };

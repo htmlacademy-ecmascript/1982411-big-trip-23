@@ -2,7 +2,7 @@ import TripInfoMainView from '../view/trip-info-main-view.js';
 import TripInfoCostView from '../view/trip-info-cost-view.js';
 import FiltersView from '../view/filters-view.js';
 import AddEventButtonView from '../view/add-event-button-view.js';
-import { generateFilter } from '../mock/filter-mock.js';
+import { generateFilters } from '../mock/filter-mock.js';
 
 import { render } from '../framework/render.js';
 
@@ -29,7 +29,7 @@ export default class HeaderContentPresenter {
   }
 
   #renderFilters() {
-    const filters = generateFilter(this.#events);
+    const filters = generateFilters(this.#events);
     render(new FiltersView({filters: filters}), this.#tripControlsFiltersContainer);
   }
 }
