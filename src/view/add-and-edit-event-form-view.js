@@ -1,6 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { getFormattedEventDate, getTotalEventPrice } from '../utils/event.js';
-import { DATE_FORMAT, EVENT_TYPES } from '../const.js';
+import { dateFormat, eventType } from '../const.js';
 
 function createDestinationTemplate(citiesList) {
   let destinationTemplate = '';
@@ -116,8 +116,8 @@ function createAddAndEditEventFormTemplate(event, isEditEventForm = false) {
   const { name: cityName, description: cityDescription, pictures } = event.city;
   const { selectedOffers, offers, citiesList } = event;
 
-  const startDate = getFormattedEventDate(dateFrom, DATE_FORMAT.INPUT_DATE_FORMAT);
-  const endDate = getFormattedEventDate(dateTo, DATE_FORMAT.INPUT_DATE_FORMAT);
+  const startDate = getFormattedEventDate(dateFrom, dateFormat.INPUT_DATE_FORMAT);
+  const endDate = getFormattedEventDate(dateTo, dateFormat.INPUT_DATE_FORMAT);
   const totalPrice = getTotalEventPrice(basePrice, selectedOffers);
 
   return `
@@ -134,7 +134,7 @@ function createAddAndEditEventFormTemplate(event, isEditEventForm = false) {
         <div class="event__type-list">
           <fieldset class="event__type-group">
             <legend class="visually-hidden">Event type</legend>
-            ${createEventTypeItemTemplate(EVENT_TYPES, type)}
+            ${createEventTypeItemTemplate(eventType, type)}
           </fieldset>
         </div>
       </div>

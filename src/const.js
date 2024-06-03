@@ -1,6 +1,6 @@
 const EVENTS_COUNT = 4;
 
-const EVENT_TYPES = [
+const eventType = [
   'Taxi',
   'Bus',
   'Train',
@@ -12,7 +12,7 @@ const EVENT_TYPES = [
   'Restaurant',
 ];
 
-const DATE_FORMAT = {
+const dateFormat = {
   EVENT_TIME_FORMAT: 'HH:mm',
   EVENT_DATE_FORMAT: 'MMM DD',
   EVENT_DATE_ATTRIBUTE_FORMAT: 'YYYY-MM-DD',
@@ -25,7 +25,7 @@ const DATE_FORMAT = {
 const HOURS = 24;
 const MINUTES = 60;
 
-const NEW_EVENT_INFO = {
+const newEventInfo = {
   'id': '',
   'basePrice': 0,
   'dateFrom': '',
@@ -36,30 +36,30 @@ const NEW_EVENT_INFO = {
   'type': 'flight'
 };
 
-const NEW_EVENT_CITY = {
+const newEventCity = {
   id: '',
   description: '',
   name: '',
   pictures: [],
 };
 
-const MESSAGES = {
+const Message = {
   FAILED: 'Failed to load latest route information',
   LOADING: 'Loading...'
 };
 
-const FILTER_TYPE = {
+const filterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
   PRESENT: 'present',
   PAST: 'past',
 };
 
-const FILTER_EMPTY_MESSAGES = {
-  [FILTER_TYPE.EVERYTHING]: 'Click New Event to create your first point',
-  [FILTER_TYPE.FUTURE]: 'There are no future events now',
-  [FILTER_TYPE.PRESENT]: 'There are no present events now',
-  [FILTER_TYPE.PAST]: 'There are no past events now',
+const filterEmptyMessage = {
+  [filterType.EVERYTHING]: 'Click New Event to create your first point',
+  [filterType.FUTURE]: 'There are no future events now',
+  [filterType.PRESENT]: 'There are no present events now',
+  [filterType.PAST]: 'There are no past events now',
 };
 
-export { EVENTS_COUNT, EVENT_TYPES, DATE_FORMAT, HOURS, MINUTES, NEW_EVENT_INFO, NEW_EVENT_CITY, MESSAGES, FILTER_TYPE, FILTER_EMPTY_MESSAGES};
+export { EVENTS_COUNT, eventType, dateFormat, HOURS, MINUTES, newEventInfo, newEventCity, Message, filterType, filterEmptyMessage};
