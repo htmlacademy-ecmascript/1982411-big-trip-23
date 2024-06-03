@@ -105,8 +105,8 @@ export default class TripEventsPresenter {
     render(this.#tripEventsListComponent, this.#tripEventsContainer);
 
     const sortedEvents = this.#getSortedEvents(this.#events);
-    for (let i = 0; i < sortedEvents.length; i++) {
-      this.#renderEvent(this.#getEventInfo(sortedEvents[i]));
-    }
+    sortedEvents.forEach((event) => {
+      this.#renderEvent(this.#getEventInfo(event));
+    });
   }
 }

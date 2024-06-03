@@ -6,15 +6,15 @@ import { dateFormat } from '../const.js';
 function createTripEventsListItemOfferTemplate(offers) {
   let offerTemplate = '';
   if (offers && offers.length !== 0) {
-    for (let i = 0; i < offers.length; i++) {
+    offers.forEach((offer) => {
       offerTemplate += `
       <li class="event__offer">
-         <span class="event__offer-title">${offers[i].title}</span>
+         <span class="event__offer-title">${offer.title}</span>
            &plus;&euro;&nbsp;
-         <span class="event__offer-price">${offers[i].price}</span>
+         <span class="event__offer-price">${offer.price}</span>
       </li>
       `;
-    }
+    });
   }
   return offerTemplate;
 }
