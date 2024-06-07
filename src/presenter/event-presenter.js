@@ -4,14 +4,16 @@ import AddAndEditEventFormView from '../view/add-and-edit-event-form-view.js';
 
 export default class EventPresenter {
   #eventListContainer = null;
+  #handleDataChange = null;
 
   #eventsListItemComponent = null;
   #addAndEditEventFormComponent = null;
 
   #event = null;
 
-  constructor({eventListContainer}) {
+  constructor({eventListContainer, onDataChange}) {
     this.#eventListContainer = eventListContainer;
+    this.#handleDataChange = onDataChange;
   }
 
   init(event) {
@@ -23,6 +25,7 @@ export default class EventPresenter {
     this.#eventsListItemComponent = new TripEventsListItemView({
       event: this.#event,
       onOpenEditFormClick: this.#handleOpenEditFormClick,
+      onFavoriteClick: this.#handleFavoriteClick,
     });
     this.#addAndEditEventFormComponent = new AddAndEditEventFormView({
       event: this.#event,
@@ -38,7 +41,7 @@ export default class EventPresenter {
 
     // Проверка на наличие в DOM необходима,
     // чтобы не пытаться заменить то, что не было отрисовано
-    if (this.#eventListContainer.contains(prevAddAndEditEventFormComponent.element)) {
+    if (this.#eventListContainer.contains(prevEventsListItemComponent.element)) {
       replace(this.#eventsListItemComponent, prevEventsListItemComponent);
     }
 
@@ -46,7 +49,7 @@ export default class EventPresenter {
       replace(this.#addAndEditEventFormComponent, prevAddAndEditEventFormComponent);
     }
 
-    remove(prevAddAndEditEventFormComponent);
+    remove(prevEventsListItemComponent);
     remove(prevAddAndEditEventFormComponent);
   }
 
@@ -76,7 +79,14 @@ export default class EventPresenter {
     this.#replaceEventItemToForm();
   };
 
-  #handleFormSubmit = () => {
+  #handleFavoriteClick = () => {
+    const changedEventData = {...this.#event.eventData, isFavorite: !this.#event.eventData.isFavorite};
+    const changedData = {...this.#event, eventData: changedEventData };
+    this.#handleDataChange(changedData);
+  };
+
+  #handleFormSubmit = (event) => {
+    this.#handleDataChange(event);
     this.#replaceFormToEventItem();
   };
 

@@ -1,8 +1,8 @@
+import {nanoid} from 'nanoid';
 import { getRandomArrayElement } from '../utils/common';
 
 const mockEvents = [
   {
-    'id': '3470cafa-31a4-4b71-8e33-bd3c3df7df38',
     'basePrice': 174,
     'dateFrom': '2024-04-15T15:08:07.164Z',
     'dateTo': '2024-04-17T15:10:07.164Z',
@@ -12,7 +12,6 @@ const mockEvents = [
     'type': 'sightseeing'
   },
   {
-    'id': '125899ed-d862-4897-87dd-8bdf5ba1d6cd',
     'basePrice': 4437,
     'dateFrom': '2024-04-19T13:56:07.164Z',
     'dateTo': '2024-04-20T01:52:07.164Z',
@@ -22,7 +21,6 @@ const mockEvents = [
     'type': 'bus'
   },
   {
-    'id': 'fbe950a3-4b3d-4812-98a6-6e4bbdea32f0',
     'basePrice': 9819,
     'dateFrom': '2024-04-21T16:16:07.164Z',
     'dateTo': '2024-04-21T23:41:07.164Z',
@@ -36,7 +34,6 @@ const mockEvents = [
     'type': 'ship'
   },
   {
-    'id': '627621ba-66b9-4ecc-b399-524015f6285b',
     'basePrice': 3324,
     'dateFrom': '2024-04-22T16:22:07.164Z',
     'dateTo': '2024-04-24T10:13:07.164Z',
@@ -49,7 +46,6 @@ const mockEvents = [
     'type': 'taxi'
   },
   {
-    'id': 'd1d58b95-1f7b-4abf-aaf2-8a3e059b6ee4',
     'basePrice': 6710,
     'dateFrom': '2024-04-25T15:51:07.164Z',
     'dateTo': '2024-04-27T05:45:07.164Z',
@@ -59,7 +55,6 @@ const mockEvents = [
     'type': 'train'
   },
   {
-    'id': 'd411637a-9036-4931-8ccb-45ce0996978e',
     'basePrice': 1622,
     'dateFrom': '2024-04-27T20:06:07.164Z',
     'dateTo': '2024-04-29T02:01:07.164Z',
@@ -74,7 +69,6 @@ const mockEvents = [
     'type': 'ship'
   },
   {
-    'id': 'efc7cbd5-fea9-4324-89ff-c765b5abd72f',
     'basePrice': 2494,
     'dateFrom': '2024-04-30T11:46:07.164Z',
     'dateTo': '2024-05-01T17:57:07.164Z',
@@ -87,7 +81,6 @@ const mockEvents = [
     'type': 'drive'
   },
   {
-    'id': '4eae0fce-f283-4f3a-83a5-35a6ef9ab6b6',
     'basePrice': 2541,
     'dateFrom': '2024-05-02T18:49:07.164Z',
     'dateTo': '2024-05-04T16:09:07.164Z',
@@ -101,7 +94,6 @@ const mockEvents = [
     'type': 'train'
   },
   {
-    'id': '868139a6-5d8d-44e5-a9ac-27bea677221a',
     'basePrice': 7180,
     'dateFrom': '2024-05-05T16:56:07.164Z',
     'dateTo': '2024-05-07T13:08:07.164Z',
@@ -114,7 +106,6 @@ const mockEvents = [
     'type': 'train'
   },
   {
-    'id': '53cef26f-d2c7-4129-95c0-57821b53c4f2',
     'basePrice': 1578,
     'dateFrom': '2024-05-09T04:37:07.164Z',
     'dateTo': '2024-05-11T04:06:07.164Z',
@@ -128,7 +119,6 @@ const mockEvents = [
     'type': 'train'
   },
   {
-    'id': '0f4209da-636b-4f92-aee1-5fa91cc1137d',
     'basePrice': 4667,
     'dateFrom': '2024-05-12T16:52:07.164Z',
     'dateTo': '2024-05-13T05:57:07.164Z',
@@ -142,7 +132,6 @@ const mockEvents = [
     'type': 'flight'
   },
   {
-    'id': '8bbb7b71-d58c-4a0f-b147-680ac7864453',
     'basePrice': 7143,
     'dateFrom': '2024-05-14T02:35:07.164Z',
     'dateTo': '2024-05-15T22:01:07.164Z',
@@ -154,7 +143,6 @@ const mockEvents = [
     'type': 'ship'
   },
   {
-    'id': '40bfe63b-9b5a-4bc5-ad57-8926210bcf51',
     'basePrice': 6372,
     'dateFrom': '2024-05-17T10:44:07.164Z',
     'dateTo': '2024-05-18T05:59:07.164Z',
@@ -164,7 +152,6 @@ const mockEvents = [
     'type': 'drive'
   },
   {
-    'id': '8ee20c6e-4dd1-43b9-957b-9d4a87bb2ad1',
     'basePrice': 1792,
     'dateFrom': '2024-05-19T19:26:07.164Z',
     'dateTo': '2024-05-20T05:15:07.164Z',
@@ -177,7 +164,6 @@ const mockEvents = [
     'type': 'bus'
   },
   {
-    'id': '6ffc26bb-fb28-4f67-a0dc-74ae27337a79',
     'basePrice': 124,
     'dateFrom': '2024-05-21T05:42:07.164Z',
     'dateTo': '2024-05-22T14:50:07.164Z',
@@ -190,7 +176,6 @@ const mockEvents = [
     'type': 'restaurant'
   },
   {
-    'id': '5c7619dd-cc66-49bc-b43f-d9a5d78dc4bc',
     'basePrice': 8568,
     'dateFrom': '2024-05-23T02:12:07.164Z',
     'dateTo': '2024-05-23T17:11:07.164Z',
@@ -200,7 +185,6 @@ const mockEvents = [
     'type': 'sightseeing'
   },
   {
-    'id': '9691f0b1-a9fb-4ffc-80c2-aafa11d9d0fc',
     'basePrice': 2890,
     'dateFrom': '2024-05-24T17:32:07.164Z',
     'dateTo': '2024-05-26T00:23:07.164Z',
@@ -210,7 +194,6 @@ const mockEvents = [
     'type': 'sightseeing'
   },
   {
-    'id': '08d4ce47-b7f7-4161-a423-defdfc471044',
     'basePrice': 1688,
     'dateFrom': '2024-05-26T07:28:07.164Z',
     'dateTo': '2024-05-26T23:15:07.164Z',
@@ -220,7 +203,6 @@ const mockEvents = [
     'type': 'sightseeing'
   },
   {
-    'id': '02a9033e-eccf-4571-8b76-a9cd335f307a',
     'basePrice': 512,
     'dateFrom': '2024-05-27T22:07:07.164Z',
     'dateTo': '2024-05-28T21:16:07.164Z',
@@ -234,7 +216,6 @@ const mockEvents = [
     'type': 'taxi'
   },
   {
-    'id': 'c8a87a71-ed15-41b3-9770-99517b3d8fcd',
     'basePrice': 1511,
     'dateFrom': '2024-05-29T15:24:07.164Z',
     'dateTo': '2024-05-30T03:42:07.164Z',
@@ -244,7 +225,6 @@ const mockEvents = [
     'type': 'drive'
   },
   {
-    'id': 'd4cae048-2b34-4bc9-9f8a-56bcf070abf8',
     'basePrice': 9872,
     'dateFrom': '2024-05-30T18:17:07.164Z',
     'dateTo': '2024-05-31T22:15:07.164Z',
@@ -254,7 +234,6 @@ const mockEvents = [
     'type': 'sightseeing'
   },
   {
-    'id': '155622b5-ba54-425a-a265-c341f0bf94fd',
     'basePrice': 6794,
     'dateFrom': '2024-06-01T20:39:07.164Z',
     'dateTo': '2024-06-03T18:43:07.164Z',
@@ -270,7 +249,6 @@ const mockEvents = [
     'type': 'taxi'
   },
   {
-    'id': '8bca9025-4412-4cc2-9c77-fe4d619befb0',
     'basePrice': 740,
     'dateFrom': '2024-06-04T13:11:07.164Z',
     'dateTo': '2024-06-05T09:12:07.164Z',
@@ -280,7 +258,6 @@ const mockEvents = [
     'type': 'drive'
   },
   {
-    'id': '1f2c1ef8-7203-4fd8-84b3-bbf07b52f59b',
     'basePrice': 1841,
     'dateFrom': '2024-06-06T08:03:07.164Z',
     'dateTo': '2024-06-07T20:22:07.164Z',
@@ -293,7 +270,6 @@ const mockEvents = [
     'type': 'drive'
   },
   {
-    'id': '31326554-c27c-4c59-b777-3ec021aff7e9',
     'basePrice': 5528,
     'dateFrom': '2024-06-09T02:01:07.164Z',
     'dateTo': '2024-06-11T01:19:07.164Z',
@@ -306,7 +282,11 @@ const mockEvents = [
   }
 ];
 
-const getRandomMockEvent = () =>
-  getRandomArrayElement(mockEvents);
+function getRandomMockEvent() {
+  return {
+    id: nanoid(),
+    ...getRandomArrayElement(mockEvents)
+  };
+}
 
 export { getRandomMockEvent };

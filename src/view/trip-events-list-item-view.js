@@ -80,13 +80,18 @@ function createTripEventsListItemTemplate(event) {
 export default class TripEventsListItemView extends AbstractView {
   #event = null;
   #handleOpenEditFormClick = null;
+  #handleFavoriteClick = null;
 
-  constructor({event, onOpenEditFormClick}) {
+  constructor({event, onOpenEditFormClick, onFavoriteClick}) {
     super();
     this.#event = event;
     this.#handleOpenEditFormClick = onOpenEditFormClick;
+    this.#handleFavoriteClick = onFavoriteClick;
+
     this.element.querySelector('.event__rollup-btn')
       .addEventListener('click', this.#onOpenEditFormClickHandler);
+    this.element.querySelector('.event__favorite-btn ')
+      .addEventListener('click', this.#favoriteClickHandler);
   }
 
   get template() {
@@ -96,5 +101,10 @@ export default class TripEventsListItemView extends AbstractView {
   #onOpenEditFormClickHandler = (evt) => {
     evt.preventDefault();
     this.#handleOpenEditFormClick();
+  };
+
+  #favoriteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFavoriteClick();
   };
 }

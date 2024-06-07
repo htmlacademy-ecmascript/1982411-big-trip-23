@@ -3,6 +3,7 @@ import TripEventsListView from '../view/trip-events-list-view.js';
 import TripEventsMessageView from '../view/trip-events-message-view.js';
 import { newEventCity, newEventInfo, filterType } from '../const.js';
 import EventPresenter from './event-presenter.js';
+import {updateItem} from '../utils/common.js';
 
 import { render } from '../framework/render.js';
 
@@ -13,6 +14,7 @@ export default class TripEventsPresenter {
   #sortComponent = new SortView();
   #events = [];
   #cities = [];
+  #eventPresenters = new Map();
 
   constructor({tripEventsContainer, eventsModel}) {
     this.#tripEventsContainer = tripEventsContainer;
@@ -54,12 +56,19 @@ export default class TripEventsPresenter {
     return eventsInfo;
   }
 
-  #renderEvent(event) {
+  #handleTripEventChange = (updatedEvent) => {
+    this.#events = updateItem(this.#events, updatedEvent);
+    this.#eventPresenters.get(updatedEvent.eventData.id).init(updatedEvent);
+  };
+
+  #renderTripEvent(event) {
     const eventPresenter = new EventPresenter({
       eventListContainer: this.#tripEventsListComponent.element,
+      onDataChange: this.#handleTripEventChange
     });
 
     eventPresenter.init(event);
+    this.#eventPresenters.set(event.eventData.id, eventPresenter);
   }
 
   #renderEventsBoard() {
@@ -89,7 +98,12 @@ export default class TripEventsPresenter {
   #renderTripEvents() {
     const sortedEvents = this.#getSortedEvents(this.#events);
     sortedEvents.forEach((event) => {
-      this.#renderEvent(this.#getEventInfo(event));
+      this.#renderTripEvent(this.#getEventInfo(event));
     });
+  }
+
+  #clearEventsList() {
+    this.#eventPresenters.forEach((presenter) => presenter.destroy());
+    this.#eventPresenters.clear();
   }
 }
