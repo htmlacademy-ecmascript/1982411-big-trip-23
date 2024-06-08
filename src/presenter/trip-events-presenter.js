@@ -1,7 +1,7 @@
 import SortView from '../view/sort-view.js';
 import TripEventsListView from '../view/trip-events-list-view.js';
 import TripEventsMessageView from '../view/trip-events-message-view.js';
-import { newEventCity, newEventInfo, filterType, sortType } from '../const.js';
+import { filterType, sortType } from '../const.js';
 import EventPresenter from './event-presenter.js';
 import {updateItem} from '../utils/common.js';
 import { sortByDate, sortByTime, sortByPrice } from '../utils/sort.js';
@@ -15,6 +15,7 @@ export default class TripEventsPresenter {
   #sortComponent = null;
   #events = [];
   #cities = [];
+  #offers = [];
   #eventPresenters = new Map();
   #currentSortType = sortType.DEFAULT;
   #sourcedEvents = [];
@@ -27,52 +28,31 @@ export default class TripEventsPresenter {
   init() {
     this.#events = [...this.#eventsModel.events];
     this.#cities = [...this.#eventsModel.cities];
+    this.#offers = [...this.#eventsModel.offers];
     this.#sourcedEvents = [...this.#eventsModel.events];
 
     this.#renderEventsBoard();
   }
 
-  #getEventInfo(event) {
-    if (!event) {
-      const emptyEventsInfo = {
-        eventData: newEventInfo,
-        city: newEventCity,
-        selectedOffers: [],
-        offers: [],
-        citiesList: this.#cities,
-      };
-      return emptyEventsInfo;
-    }
-
-    const eventsInfo = {
-      eventData: event,
-      city: this.#eventsModel.getCityById(event.destination),
-      selectedOffers: this.#eventsModel.getSelectedOffers(event.type, event.offers),
-      offers: this.#eventsModel.getOffersByEventType(event.type),
-      citiesList: this.#cities,
-    };
-    return eventsInfo;
-  }
-
   #handleTripEventChange = (updatedEvent) => {
     this.#events = updateItem(this.#events, updatedEvent);
     this.#sourcedEvents = updateItem(this.#sourcedEvents, updatedEvent);
-    this.#eventPresenters.get(updatedEvent.eventData.id).init(updatedEvent);
+    this.#eventPresenters.get(updatedEvent.id).init(updatedEvent, this.#cities, this.#offers);
   };
 
   #handleModeChange = () => {
     this.#eventPresenters.forEach((presenter) => presenter.resetView());
   };
 
-  #renderTripEvent(event) {
+  #renderTripEvent(event, cities, offers) {
     const eventPresenter = new EventPresenter({
       eventListContainer: this.#tripEventsListComponent.element,
       onDataChange: this.#handleTripEventChange,
       onModeChange: this.#handleModeChange
     });
 
-    eventPresenter.init(event);
-    this.#eventPresenters.set(event.eventData.id, eventPresenter);
+    eventPresenter.init(event, cities, offers);
+    this.#eventPresenters.set(event.id, eventPresenter);
   }
 
   #renderEventsBoard() {
@@ -134,7 +114,7 @@ export default class TripEventsPresenter {
 
   #renderTripEvents() {
     this.#events.forEach((event) => {
-      this.#renderTripEvent(this.#getEventInfo(event));
+      this.#renderTripEvent(event, this.#cities, this.#offers);
     });
   }
 

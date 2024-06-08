@@ -19,18 +19,4 @@ export default class EventsModel {
   get cities() {
     return this.#cities;
   }
-
-  getOffersByEventType(type) {
-    const offer = this.offers.find((offerItem) => offerItem.type === type);
-    return offer.offers;
-  }
-
-  getSelectedOffers(type, offers) {
-    return this.getOffersByEventType(type).filter(
-      (offer) => offers.includes(offer.id));
-  }
-
-  getCityById(id) {
-    return this.cities.find((city) => city.id === id);
-  }
 }

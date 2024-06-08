@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { getFormattedEventDate, getTotalEventPrice } from '../utils/event.js';
+import { getFormattedEventDate, getTotalEventPrice, getSelectedOffers, getCityById, getOffersByEventType } from '../utils/event.js';
 import { dateFormat, eventType } from '../const.js';
 
 function createDestinationTemplate(citiesList) {
@@ -112,10 +112,12 @@ function createPhotosBlockTemplate(isEditEventForm, pictures) {
   return photosBlockTemplate;
 }
 
-function createAddAndEditEventFormTemplate(event, isEditEventForm = false) {
-  const { basePrice, dateFrom, dateTo, type } = event.eventData;
-  const { name: cityName, description: cityDescription, pictures } = event.city;
-  const { selectedOffers, offers, citiesList } = event;
+function createAddAndEditEventFormTemplate(event, cities, allOffers, isEditEventForm = false) {
+  const { basePrice, dateFrom, dateTo, destination, type, offers: selectedOffersIds } = event;
+  const { name: cityName, description: cityDescription, pictures } = getCityById(destination, cities);
+  const selectedOffers = getSelectedOffers(type, selectedOffersIds, allOffers);
+  const citiesList = cities;
+  const offers = getOffersByEventType(type, allOffers);
 
   const startDate = getFormattedEventDate(dateFrom, dateFormat.INPUT_DATE_FORMAT);
   const endDate = getFormattedEventDate(dateTo, dateFormat.INPUT_DATE_FORMAT);
@@ -181,13 +183,17 @@ function createAddAndEditEventFormTemplate(event, isEditEventForm = false) {
 
 export default class AddAndEditEventFormView extends AbstractView {
   #event = null;
+  #cities = [];
+  #offers = [];
   #handleFormSubmit = null;
   #handleFormClose = null;
   #isEditEventForm = false;
 
-  constructor({event, onFormSubmit, onFormClose, isEditEventForm}) {
+  constructor({event, cities, offers, onFormSubmit, onFormClose, isEditEventForm}) {
     super();
     this.#event = event;
+    this.#cities = cities;
+    this.#offers = offers;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleFormClose = onFormClose;
     this.#isEditEventForm = isEditEventForm;
@@ -202,7 +208,7 @@ export default class AddAndEditEventFormView extends AbstractView {
   }
 
   get template() {
-    return createAddAndEditEventFormTemplate(this.#event, this.#isEditEventForm);
+    return createAddAndEditEventFormTemplate(this.#event, this.#cities, this.#offers, this.#isEditEventForm);
   }
 
   #formSubmitHandler = (evt) => {
