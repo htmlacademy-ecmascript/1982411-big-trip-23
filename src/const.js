@@ -67,4 +67,10 @@ const Mode = {
   EDITING: 'EDITING',
 };
 
-export { EVENTS_COUNT, eventType, dateFormat, HOURS, MINUTES, newEventInfo, newEventCity, Message, filterType, filterEmptyMessage, Mode};
+const sortType = {
+  DEFAULT: 'day',
+  TIME_DOWN: 'time-down',
+  PRICE_DOWN: 'price-down',
+};
+
+export { EVENTS_COUNT, eventType, dateFormat, HOURS, MINUTES, newEventInfo, newEventCity, Message, filterType, filterEmptyMessage, Mode, sortType };

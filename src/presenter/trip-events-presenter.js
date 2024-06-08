@@ -1,9 +1,10 @@
 import SortView from '../view/sort-view.js';
 import TripEventsListView from '../view/trip-events-list-view.js';
 import TripEventsMessageView from '../view/trip-events-message-view.js';
-import { newEventCity, newEventInfo, filterType } from '../const.js';
+import { newEventCity, newEventInfo, filterType, sortType } from '../const.js';
 import EventPresenter from './event-presenter.js';
 import {updateItem} from '../utils/common.js';
+import { sortByDate, sortByTime, sortByPrice } from '../utils/sort.js';
 
 import { render } from '../framework/render.js';
 
@@ -11,10 +12,12 @@ export default class TripEventsPresenter {
   #tripEventsContainer = null;
   #eventsModel = null;
   #tripEventsListComponent = new TripEventsListView();
-  #sortComponent = new SortView();
+  #sortComponent = null;
   #events = [];
   #cities = [];
   #eventPresenters = new Map();
+  #currentSortType = sortType.DEFAULT;
+  #sourcedEvents = [];
 
   constructor({tripEventsContainer, eventsModel}) {
     this.#tripEventsContainer = tripEventsContainer;
@@ -24,14 +27,9 @@ export default class TripEventsPresenter {
   init() {
     this.#events = [...this.#eventsModel.events];
     this.#cities = [...this.#eventsModel.cities];
+    this.#sourcedEvents = [...this.#eventsModel.events];
 
     this.#renderEventsBoard();
-  }
-
-  #getSortedEvents(events) {
-    //TODO: переделать (при создании сортировки)
-    const sortedEvents = events.sort((a, b) => new Date(a.dateFrom).getTime() - new Date(b.dateFrom).getTime());
-    return sortedEvents;
   }
 
   #getEventInfo(event) {
@@ -58,6 +56,7 @@ export default class TripEventsPresenter {
 
   #handleTripEventChange = (updatedEvent) => {
     this.#events = updateItem(this.#events, updatedEvent);
+    this.#sourcedEvents = updateItem(this.#sourcedEvents, updatedEvent);
     this.#eventPresenters.get(updatedEvent.eventData.id).init(updatedEvent);
   };
 
@@ -85,10 +84,43 @@ export default class TripEventsPresenter {
 
     this.#renderSort();
     this.#renderTripEventsList();
+    this.#sortTasks(sortType.DEFAULT);
     this.#renderTripEvents();
   }
 
+  #handleSortTypeChange = (eventSortType) => {
+    if (this.#currentSortType === eventSortType) {
+      return;
+    }
+
+    this.#sortTasks(eventSortType);
+    this.#clearEventsList();
+    this.#renderTripEvents();
+  };
+
+  #sortTasks(eventSortType) {
+    switch (eventSortType) {
+      case sortType.DEFAULT:
+        this.#events.sort(sortByDate);
+        break;
+      case sortType.TIME_DOWN:
+        this.#events.sort(sortByTime);
+        break;
+      case sortType.PRICE_DOWN:
+        this.#events.sort(sortByPrice);
+        break;
+      default:
+        this.#events = [...this.#sourcedEvents];
+    }
+
+    this.#currentSortType = sortType;
+  }
+
   #renderSort() {
+    this.#sortComponent = new SortView({
+      onSortTypeChange: this.#handleSortTypeChange,
+      sortEventType: this.#currentSortType
+    });
     render(this.#sortComponent, this.#tripEventsContainer);
   }
 
@@ -101,8 +133,7 @@ export default class TripEventsPresenter {
   }
 
   #renderTripEvents() {
-    const sortedEvents = this.#getSortedEvents(this.#events);
-    sortedEvents.forEach((event) => {
+    this.#events.forEach((event) => {
       this.#renderTripEvent(this.#getEventInfo(event));
     });
   }
