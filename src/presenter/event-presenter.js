@@ -1,19 +1,23 @@
 import {render, replace, remove} from '../framework/render.js';
 import TripEventsListItemView from '../view/trip-events-list-item-view.js';
 import AddAndEditEventFormView from '../view/add-and-edit-event-form-view.js';
+import { Mode } from '../const.js';
 
 export default class EventPresenter {
   #eventListContainer = null;
   #handleDataChange = null;
+  #handleModeChange = null;
 
   #eventsListItemComponent = null;
   #addAndEditEventFormComponent = null;
 
   #event = null;
+  #mode = Mode.DEFAULT;
 
-  constructor({eventListContainer, onDataChange}) {
+  constructor({eventListContainer, onDataChange, onModeChange}) {
     this.#eventListContainer = eventListContainer;
     this.#handleDataChange = onDataChange;
+    this.#handleModeChange = onModeChange;
   }
 
   init(event) {
@@ -39,18 +43,22 @@ export default class EventPresenter {
       return;
     }
 
-    // Проверка на наличие в DOM необходима,
-    // чтобы не пытаться заменить то, что не было отрисовано
-    if (this.#eventListContainer.contains(prevEventsListItemComponent.element)) {
+    if (this.#mode === Mode.DEFAULT) {
       replace(this.#eventsListItemComponent, prevEventsListItemComponent);
     }
 
-    if (this.#eventListContainer.contains(prevAddAndEditEventFormComponent.element)) {
+    if (this.#mode === Mode.EDITING) {
       replace(this.#addAndEditEventFormComponent, prevAddAndEditEventFormComponent);
     }
 
     remove(prevEventsListItemComponent);
     remove(prevAddAndEditEventFormComponent);
+  }
+
+  resetView() {
+    if (this.#mode !== Mode.DEFAULT) {
+      this.#replaceFormToEventItem();
+    }
   }
 
   destroy() {
@@ -61,11 +69,14 @@ export default class EventPresenter {
   #replaceEventItemToForm() {
     replace(this.#addAndEditEventFormComponent, this.#eventsListItemComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
+    this.#handleModeChange();
+    this.#mode = Mode.EDITING;
   }
 
   #replaceFormToEventItem() {
     replace(this.#eventsListItemComponent, this.#addAndEditEventFormComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
+    this.#mode = Mode.DEFAULT;
   }
 
   #escKeyDownHandler = (evt) => {

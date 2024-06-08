@@ -62,4 +62,9 @@ const filterEmptyMessage = {
   [filterType.PAST]: 'There are no past events now',
 };
 
-export { EVENTS_COUNT, eventType, dateFormat, HOURS, MINUTES, newEventInfo, newEventCity, Message, filterType, filterEmptyMessage};
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
+
+export { EVENTS_COUNT, eventType, dateFormat, HOURS, MINUTES, newEventInfo, newEventCity, Message, filterType, filterEmptyMessage, Mode};

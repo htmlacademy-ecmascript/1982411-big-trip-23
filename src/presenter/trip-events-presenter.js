@@ -61,10 +61,15 @@ export default class TripEventsPresenter {
     this.#eventPresenters.get(updatedEvent.eventData.id).init(updatedEvent);
   };
 
+  #handleModeChange = () => {
+    this.#eventPresenters.forEach((presenter) => presenter.resetView());
+  };
+
   #renderTripEvent(event) {
     const eventPresenter = new EventPresenter({
       eventListContainer: this.#tripEventsListComponent.element,
-      onDataChange: this.#handleTripEventChange
+      onDataChange: this.#handleTripEventChange,
+      onModeChange: this.#handleModeChange
     });
 
     eventPresenter.init(event);
