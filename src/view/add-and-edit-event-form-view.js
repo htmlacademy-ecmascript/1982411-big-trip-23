@@ -1,13 +1,13 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { getFormattedEventDate, getTotalEventPrice } from '../utils/event.js';
-import { DATE_FORMAT, EVENT_TYPES } from '../const.js';
+import { dateFormat, eventType } from '../const.js';
 
 function createDestinationTemplate(citiesList) {
   let destinationTemplate = '';
   if (citiesList && citiesList.length !== 0) {
-    for (let i = 0; i < citiesList.length; i++) {
-      destinationTemplate += `<option value="${citiesList[i].name}"></option>`;
-    }
+    citiesList.forEach((city) => {
+      destinationTemplate += `<option value="${city.name}"></option>`;
+    });
   }
   return destinationTemplate;
 }
@@ -26,15 +26,15 @@ function createCloseFormButton(isEditEventForm) {
 
 function createEventTypeItemTemplate(eventTypesList, selectedEeventType) {
   let eventTypeItemTemplate = '';
-  for (let i = 0; i < eventTypesList.length; i++) {
-    const selectedEventTypeAttribute = selectedEeventType.toLowerCase() === eventTypesList[i].toLowerCase() ? 'checked' : '';
+  eventTypesList.forEach((type) => {
+    const selectedEventTypeAttribute = selectedEeventType.toLowerCase() === type.toLowerCase() ? 'checked' : '';
     eventTypeItemTemplate += `
       <div class="event__type-item">
-        <input id="event-type-${eventTypesList[i].toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${eventTypesList[i].toLowerCase()}" ${selectedEventTypeAttribute}>
-        <label class="event__type-label  event__type-label--${eventTypesList[i].toLowerCase()}" for="event-type-${eventTypesList[i].toLowerCase()}-1">${eventTypesList[i]}</label>
+        <input id="event-type-${type.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.toLowerCase()}" ${selectedEventTypeAttribute}>
+        <label class="event__type-label  event__type-label--${type.toLowerCase()}" for="event-type-${type.toLowerCase()}-1">${type}</label>
       </div>
     `;
-  }
+  });
   return eventTypeItemTemplate;
 }
 
@@ -42,19 +42,19 @@ function createOfferTemplate(offers, selectedOffers) {
   let offerTemplate = '';
   const selectedOffersSet = new Set(selectedOffers.map((offer) => offer.id));
 
-  for (let i = 0; i < offers.length; i++) {
-    const selectedOfferAttribute = selectedOffersSet.has(offers[i].id) ? 'checked' : '';
+  offers.forEach((offer, index) => {
+    const selectedOfferAttribute = selectedOffersSet.has(offer.id) ? 'checked' : '';
     offerTemplate += `
       <div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-offer${i}-1" type="checkbox" name="event-offer-offer${i}" ${selectedOfferAttribute}>
-        <label class="event__offer-label" for="event-offer-offer${i}-1">
-          <span class="event__offer-title">${offers[i].title}</span>
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-offer${index}-1" type="checkbox" name="event-offer-offer${index}" ${selectedOfferAttribute}>
+        <label class="event__offer-label" for="event-offer-offer${index}-1">
+          <span class="event__offer-title">${offer.title}</span>
           &plus;&euro;&nbsp;
-          <span class="event__offer-price">${offers[i].price}</span>
+          <span class="event__offer-price">${offer.price}</span>
         </label>
       </div>
       `;
-  }
+  });
   return offerTemplate;
 }
 
@@ -76,7 +76,7 @@ function createOffersBlockTemplate(offers, selectedOffers) {
 
 function createDestinationBlockTemplate(cityName, cityDescription, isEditEventForm, pictures) {
   let destinationBlockTemplate = '';
-  if (cityName && cityName !== '') {
+  if (cityName) {
     destinationBlockTemplate += `
     <section class="event__section  event__section--destination">
         <h3 class="event__section-title  event__section-title--destination">Destination</h3>
@@ -90,9 +90,10 @@ function createDestinationBlockTemplate(cityName, cityDescription, isEditEventFo
 
 function createImageTemplate(pictures) {
   let imageTemplate = '';
-  for (let i = 0; i < pictures.length; i++) {
-    imageTemplate += `<img class="event__photo" src="${pictures[i].src}" alt="${pictures[i].description}">`;
-  }
+
+  pictures.forEach((picture) => {
+    imageTemplate += `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`;
+  });
 
   return imageTemplate;
 }
@@ -116,8 +117,8 @@ function createAddAndEditEventFormTemplate(event, isEditEventForm = false) {
   const { name: cityName, description: cityDescription, pictures } = event.city;
   const { selectedOffers, offers, citiesList } = event;
 
-  const startDate = getFormattedEventDate(dateFrom, DATE_FORMAT.INPUT_DATE_FORMAT);
-  const endDate = getFormattedEventDate(dateTo, DATE_FORMAT.INPUT_DATE_FORMAT);
+  const startDate = getFormattedEventDate(dateFrom, dateFormat.INPUT_DATE_FORMAT);
+  const endDate = getFormattedEventDate(dateTo, dateFormat.INPUT_DATE_FORMAT);
   const totalPrice = getTotalEventPrice(basePrice, selectedOffers);
 
   return `
@@ -134,7 +135,7 @@ function createAddAndEditEventFormTemplate(event, isEditEventForm = false) {
         <div class="event__type-list">
           <fieldset class="event__type-group">
             <legend class="visually-hidden">Event type</legend>
-            ${createEventTypeItemTemplate(EVENT_TYPES, type)}
+            ${createEventTypeItemTemplate(eventType, type)}
           </fieldset>
         </div>
       </div>
@@ -206,7 +207,7 @@ export default class AddAndEditEventFormView extends AbstractView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit();
+    this.#handleFormSubmit(this.#event);
   };
 
   #formCloseHandler = (evt) => {

@@ -1,20 +1,20 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { getFormattedEventDate, getEventDurationTime, getTotalEventPrice } from '../utils/event.js';
-import { DATE_FORMAT } from '../const.js';
+import { dateFormat } from '../const.js';
 
 
 function createTripEventsListItemOfferTemplate(offers) {
   let offerTemplate = '';
   if (offers && offers.length !== 0) {
-    for (let i = 0; i < offers.length; i++) {
+    offers.forEach((offer) => {
       offerTemplate += `
       <li class="event__offer">
-         <span class="event__offer-title">${offers[i].title}</span>
+         <span class="event__offer-title">${offer.title}</span>
            &plus;&euro;&nbsp;
-         <span class="event__offer-price">${offers[i].price}</span>
+         <span class="event__offer-price">${offer.price}</span>
       </li>
       `;
-    }
+    });
   }
   return offerTemplate;
 }
@@ -35,12 +35,12 @@ function createTripEventsListItemTemplate(event) {
   const { name: cityName} = event.city;
   const { selectedOffers } = event;
 
-  const startDate = getFormattedEventDate(dateFrom, DATE_FORMAT.EVENT_DATE_FORMAT);
-  const startDateForAttribute = getFormattedEventDate(dateFrom, DATE_FORMAT.EVENT_DATE_ATTRIBUTE_FORMAT);
-  const startTime = getFormattedEventDate(dateFrom, DATE_FORMAT.EVENT_TIME_FORMAT);
-  const startTimeForAttribute = getFormattedEventDate(dateFrom, DATE_FORMAT.EVENT_DATETIME_ATTRIBUTE_FORMAT);
-  const endTime = getFormattedEventDate(dateTo, DATE_FORMAT.EVENT_TIME_FORMAT);
-  const endTimeForAttribute = getFormattedEventDate(dateTo, DATE_FORMAT.EVENT_DATETIME_ATTRIBUTE_FORMAT);
+  const startDate = getFormattedEventDate(dateFrom, dateFormat.EVENT_DATE_FORMAT);
+  const startDateForAttribute = getFormattedEventDate(dateFrom, dateFormat.EVENT_DATE_ATTRIBUTE_FORMAT);
+  const startTime = getFormattedEventDate(dateFrom, dateFormat.EVENT_TIME_FORMAT);
+  const startTimeForAttribute = getFormattedEventDate(dateFrom, dateFormat.EVENT_DATETIME_ATTRIBUTE_FORMAT);
+  const endTime = getFormattedEventDate(dateTo, dateFormat.EVENT_TIME_FORMAT);
+  const endTimeForAttribute = getFormattedEventDate(dateTo, dateFormat.EVENT_DATETIME_ATTRIBUTE_FORMAT);
   const durationTime = getEventDurationTime(dateFrom, dateTo);
 
   const totalPrice = getTotalEventPrice(basePrice, selectedOffers);
@@ -80,13 +80,18 @@ function createTripEventsListItemTemplate(event) {
 export default class TripEventsListItemView extends AbstractView {
   #event = null;
   #handleOpenEditFormClick = null;
+  #handleFavoriteClick = null;
 
-  constructor({event, onOpenEditFormClick}) {
+  constructor({event, onOpenEditFormClick, onFavoriteClick}) {
     super();
     this.#event = event;
     this.#handleOpenEditFormClick = onOpenEditFormClick;
+    this.#handleFavoriteClick = onFavoriteClick;
+
     this.element.querySelector('.event__rollup-btn')
       .addEventListener('click', this.#onOpenEditFormClickHandler);
+    this.element.querySelector('.event__favorite-btn ')
+      .addEventListener('click', this.#favoriteClickHandler);
   }
 
   get template() {
@@ -96,5 +101,10 @@ export default class TripEventsListItemView extends AbstractView {
   #onOpenEditFormClickHandler = (evt) => {
     evt.preventDefault();
     this.#handleOpenEditFormClick();
+  };
+
+  #favoriteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFavoriteClick();
   };
 }

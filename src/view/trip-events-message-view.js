@@ -1,11 +1,11 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { FILTER_EMPTY_MESSAGES } from '../const';
+import { filterEmptyMessage } from '../const';
 
 
 function createTripEventsMessageTemplate(data, isEventsListEmptyMessage) {
   if (isEventsListEmptyMessage) {
     return `
-      <p class="trip-events__msg">${FILTER_EMPTY_MESSAGES[data]}</p>
+      <p class="trip-events__msg">${filterEmptyMessage[data]}</p>
     `;
   }
   return `
