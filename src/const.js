@@ -73,4 +73,6 @@ const sortType = {
   PRICE_DOWN: 'price-down',
 };
 
-export { EVENTS_COUNT, eventType, dateFormat, HOURS, MINUTES, newEventInfo, newEventCity, Message, filterType, filterEmptyMessage, Mode, sortType };
+const PRICE_PATTERN = '[0-9]*';
+
+export { EVENTS_COUNT, eventType, dateFormat, HOURS, MINUTES, newEventInfo, newEventCity, Message, filterType, filterEmptyMessage, Mode, sortType, PRICE_PATTERN };

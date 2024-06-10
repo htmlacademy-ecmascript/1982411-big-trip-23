@@ -39,7 +39,7 @@ function createTripEventButtonFav(isFavorite) {
 function createTripEventsListItemTemplate(event, cities, offers) {
   const { basePrice, dateFrom, dateTo, destination, type, isFavorite, offers: selectedOffersIds } = event;
   const cityName = getCityById(destination, cities).name;
-  const selectedOffers = getSelectedOffers(type, selectedOffersIds, offers);
+  const selectedOffers = getSelectedOffers(type, [...selectedOffersIds], offers);
 
   const startDate = getFormattedEventDate(dateFrom, dateFormat.EVENT_DATE_FORMAT);
   const startDateForAttribute = getFormattedEventDate(dateFrom, dateFormat.EVENT_DATE_ATTRIBUTE_FORMAT);
