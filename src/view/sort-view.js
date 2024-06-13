@@ -1,4 +1,4 @@
-import { sortType } from '../const.js';
+import { SortType } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
 
 function createSortTemplate(sortEventType) {
@@ -11,8 +11,8 @@ function createSortTemplate(sortEventType) {
     type="radio"
     name="trip-sort"
     value="sort-day"
-    data-sort-type="${sortType.DEFAULT}"
-    ${sortEventType === sortType.DEFAULT ? 'checked' : ''}>
+    data-sort-type="${SortType.DEFAULT}"
+    ${sortEventType === SortType.DEFAULT ? 'checked' : ''}>
     <label class="trip-sort__btn" for="sort-day">Day</label>
   </div>
 
@@ -28,8 +28,8 @@ function createSortTemplate(sortEventType) {
     type="radio"
     name="trip-sort"
     value="sort-time"
-    data-sort-type="${sortType.TIME_DOWN}"
-    ${sortEventType === sortType.TIME_DOWN ? 'checked' : ''}>
+    data-sort-type="${SortType.TIME_DOWN}"
+    ${sortEventType === SortType.TIME_DOWN ? 'checked' : ''}>
     <label class="trip-sort__btn" for="sort-time">Time</label>
   </div>
 
@@ -40,8 +40,8 @@ function createSortTemplate(sortEventType) {
     type="radio"
     name="trip-sort"
     value="sort-price"
-    data-sort-type="${sortType.PRICE_DOWN}"
-    ${sortEventType === sortType.PRICE_DOWN ? 'checked' : ''}>
+    data-sort-type="${SortType.PRICE_DOWN}"
+    ${sortEventType === SortType.PRICE_DOWN ? 'checked' : ''}>
     <label class="trip-sort__btn" for="sort-price">Price</label>
   </div>
 

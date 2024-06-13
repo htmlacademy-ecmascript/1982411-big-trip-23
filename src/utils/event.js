@@ -47,4 +47,28 @@ function isPastEvent(endDate) {
   return dayjs().isBefore(endDate, 'D');
 }
 
-export { getFormattedEventDate, getEventDurationTime, getTotalEventPrice, isFutureEvent, isPresentEvent, isPastEvent };
+function getOffersByEventType(type, allOffers) {
+  const offer = allOffers.find((offerItem) => offerItem.type === type);
+  return offer.offers;
+}
+
+function getSelectedOffers(type, offersIds, allOffers) {
+  return getOffersByEventType(type, allOffers).filter(
+    (offer) => offersIds.includes(offer.id));
+}
+
+function getCityById(id, cities) {
+  return cities.find((city) => city.id === id);
+}
+
+export {
+  getFormattedEventDate,
+  getEventDurationTime,
+  getTotalEventPrice,
+  isFutureEvent,
+  isPresentEvent,
+  isPastEvent,
+  getOffersByEventType,
+  getSelectedOffers,
+  getCityById
+};

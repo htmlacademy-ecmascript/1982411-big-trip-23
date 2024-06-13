@@ -12,6 +12,8 @@ export default class EventPresenter {
   #addAndEditEventFormComponent = null;
 
   #event = null;
+  #cities = [];
+  #offers = [];
   #mode = Mode.DEFAULT;
 
   constructor({eventListContainer, onDataChange, onModeChange}) {
@@ -20,19 +22,25 @@ export default class EventPresenter {
     this.#handleModeChange = onModeChange;
   }
 
-  init(event) {
+  init(event, cities, offers) {
     this.#event = event;
+    this.#cities = cities;
+    this.#offers = offers;
 
     const prevEventsListItemComponent = this.#eventsListItemComponent;
     const prevAddAndEditEventFormComponent = this.#addAndEditEventFormComponent;
 
     this.#eventsListItemComponent = new TripEventsListItemView({
       event: this.#event,
+      cities: this.#cities,
+      offers: this.#offers,
       onOpenEditFormClick: this.#handleOpenEditFormClick,
       onFavoriteClick: this.#handleFavoriteClick,
     });
     this.#addAndEditEventFormComponent = new AddAndEditEventFormView({
       event: this.#event,
+      cities: this.#cities,
+      offers: this.#offers,
       onFormSubmit: this.#handleFormSubmit,
       onFormClose: this.#handleFormClose,
       isEditEventForm: true
@@ -57,6 +65,7 @@ export default class EventPresenter {
 
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
+      this.#addAndEditEventFormComponent.reset(this.#event);
       this.#replaceFormToEventItem();
     }
   }
@@ -82,6 +91,7 @@ export default class EventPresenter {
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
+      this.#addAndEditEventFormComponent.reset(this.#event);
       this.#replaceFormToEventItem();
     }
   };
@@ -91,8 +101,7 @@ export default class EventPresenter {
   };
 
   #handleFavoriteClick = () => {
-    const changedEventData = {...this.#event.eventData, isFavorite: !this.#event.eventData.isFavorite};
-    const changedData = {...this.#event, eventData: changedEventData };
+    const changedData = {...this.#event, isFavorite: !this.#event.isFavorite };
     this.#handleDataChange(changedData);
   };
 
@@ -102,6 +111,7 @@ export default class EventPresenter {
   };
 
   #handleFormClose = () => {
+    this.#addAndEditEventFormComponent.reset(this.#event);
     this.#replaceFormToEventItem();
   };
 }

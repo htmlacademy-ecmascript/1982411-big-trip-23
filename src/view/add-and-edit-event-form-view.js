@@ -1,6 +1,6 @@
-import AbstractView from '../framework/view/abstract-view.js';
-import { getFormattedEventDate, getTotalEventPrice } from '../utils/event.js';
-import { dateFormat, eventType } from '../const.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
+import { getFormattedEventDate, getTotalEventPrice, getSelectedOffers, getCityById, getOffersByEventType } from '../utils/event.js';
+import { DateFormat, EVENT_TYPES, PRICE_PATTERN } from '../const.js';
 
 function createDestinationTemplate(citiesList) {
   let destinationTemplate = '';
@@ -46,8 +46,8 @@ function createOfferTemplate(offers, selectedOffers) {
     const selectedOfferAttribute = selectedOffersSet.has(offer.id) ? 'checked' : '';
     offerTemplate += `
       <div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-offer${index}-1" type="checkbox" name="event-offer-offer${index}" ${selectedOfferAttribute}>
-        <label class="event__offer-label" for="event-offer-offer${index}-1">
+        <input class="event__offer-checkbox  visually-hidden" id="${offer.id}" type="checkbox" name="event-offer-offer-${index}" ${selectedOfferAttribute}>
+        <label class="event__offer-label" for="${offer.id}">
           <span class="event__offer-title">${offer.title}</span>
           &plus;&euro;&nbsp;
           <span class="event__offer-price">${offer.price}</span>
@@ -112,13 +112,15 @@ function createPhotosBlockTemplate(isEditEventForm, pictures) {
   return photosBlockTemplate;
 }
 
-function createAddAndEditEventFormTemplate(event, isEditEventForm = false) {
-  const { basePrice, dateFrom, dateTo, type } = event.eventData;
-  const { name: cityName, description: cityDescription, pictures } = event.city;
-  const { selectedOffers, offers, citiesList } = event;
+function createAddAndEditEventFormTemplate(event, cities, allOffers, isEditEventForm = false) {
+  const { basePrice, dateFrom, dateTo, destination, type, offers: selectedOffersIds } = event;
+  const { name: cityName, description: cityDescription, pictures } = getCityById(destination, cities);
+  const selectedOffers = getSelectedOffers(type, [...selectedOffersIds], allOffers);
+  const citiesList = cities;
+  const offers = getOffersByEventType(type, allOffers);
 
-  const startDate = getFormattedEventDate(dateFrom, dateFormat.INPUT_DATE_FORMAT);
-  const endDate = getFormattedEventDate(dateTo, dateFormat.INPUT_DATE_FORMAT);
+  const startDate = getFormattedEventDate(dateFrom, DateFormat.INPUT_DATE_FORMAT);
+  const endDate = getFormattedEventDate(dateTo, DateFormat.INPUT_DATE_FORMAT);
   const totalPrice = getTotalEventPrice(basePrice, selectedOffers);
 
   return `
@@ -135,7 +137,7 @@ function createAddAndEditEventFormTemplate(event, isEditEventForm = false) {
         <div class="event__type-list">
           <fieldset class="event__type-group">
             <legend class="visually-hidden">Event type</legend>
-            ${createEventTypeItemTemplate(eventType, type)}
+            ${createEventTypeItemTemplate(EVENT_TYPES, type)}
           </fieldset>
         </div>
       </div>
@@ -163,7 +165,7 @@ function createAddAndEditEventFormTemplate(event, isEditEventForm = false) {
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${totalPrice}">
+        <input class="event__input  event__input--price" id="event-price-1" type="text" pattern="${PRICE_PATTERN}" name="event-price" value="${totalPrice}">
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -179,21 +181,52 @@ function createAddAndEditEventFormTemplate(event, isEditEventForm = false) {
   `;
 }
 
-export default class AddAndEditEventFormView extends AbstractView {
-  #event = null;
+export default class AddAndEditEventFormView extends AbstractStatefulView {
+  #cities = [];
+  #offers = [];
   #handleFormSubmit = null;
   #handleFormClose = null;
   #isEditEventForm = false;
 
-  constructor({event, onFormSubmit, onFormClose, isEditEventForm}) {
+  constructor({event, cities, offers, onFormSubmit, onFormClose, isEditEventForm}) {
     super();
-    this.#event = event;
+    this._setState(AddAndEditEventFormView.parseEventToState(event));
+    this.#cities = cities;
+    this.#offers = offers;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleFormClose = onFormClose;
     this.#isEditEventForm = isEditEventForm;
 
+    this._restoreHandlers();
+  }
+
+  get template() {
+    return createAddAndEditEventFormTemplate(this._state, this.#cities, this.#offers, this.#isEditEventForm);
+  }
+
+  reset(event) {
+    this.updateElement(
+      AddAndEditEventFormView.parseEventToState(event),
+    );
+  }
+
+  _restoreHandlers() {
     this.element.querySelector('form')
       .addEventListener('submit', this.#formSubmitHandler);
+
+    this.element.querySelector('.event__type-group')
+      .addEventListener('change', this.#eventTypeChangeHandler);
+
+    this.element.querySelector('.event__input--destination')
+      .addEventListener('change', this.#cityChangeHandler);
+
+    this.element.querySelector('.event__input--price')
+      .addEventListener('input', this.#priceChangeHandler);
+
+    const offersSection = this.element.querySelector('.event__section--offers');
+    if (offersSection) {
+      offersSection.addEventListener('change', this.#offerSelectHandler);
+    }
 
     const closeFormButton = this.element.querySelector('.event__rollup-btn');
     if (closeFormButton) {
@@ -201,17 +234,66 @@ export default class AddAndEditEventFormView extends AbstractView {
     }
   }
 
-  get template() {
-    return createAddAndEditEventFormTemplate(this.#event, this.#isEditEventForm);
-  }
-
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(this.#event);
+    this.#handleFormSubmit(AddAndEditEventFormView.parseStateToEvent(this._state));
   };
 
   #formCloseHandler = (evt) => {
     evt.preventDefault();
     this.#handleFormClose();
   };
+
+  #eventTypeChangeHandler = (evt) => {
+    evt.preventDefault();
+    if (evt.target.tagName === 'INPUT') {
+      this.updateElement({
+        type: evt.target.value,
+        offers: new Set(),
+      });
+    }
+  };
+
+  #offerSelectHandler = (evt) => {
+    evt.preventDefault();
+    if (evt.target.tagName === 'INPUT') {
+      if (evt.target.hasAttribute('checked')) {
+        this._state.offers.delete(evt.target.id);
+        evt.target.removeAttribute('checked');
+      } else {
+        this._state.offers.add(evt.target.id);
+        evt.target.setAttribute('checked', '');
+      }
+    }
+  };
+
+  #cityChangeHandler = (evt) => {
+    const cityName = evt.target.value;
+    const newCity = this.#cities.find((city) => city.name === cityName);
+
+    if (!newCity) {
+      return;
+    }
+
+    this.updateElement({
+      destination: newCity.id,
+    });
+  };
+
+  #priceChangeHandler = (evt) => {
+    const newPrice = evt.target.value;
+    if (newPrice) {
+      this._state.basePrice = newPrice;
+    }
+  };
+
+  static parseEventToState(event) {
+    return {...event, offers: new Set(event.offers)};
+  }
+
+  static parseStateToEvent(event) {
+    const updatedEvent = {...event};
+
+    return updatedEvent;
+  }
 }

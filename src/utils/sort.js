@@ -1,15 +1,15 @@
 import dayjs from 'dayjs';
 
-function sortByDate(a, b) {
-  return dayjs(a.dateFrom).diff(dayjs(b.dateFrom));
+function sortByDate(eventA, eventB) {
+  return dayjs(eventA.dateFrom).diff(dayjs(eventB.dateFrom));
 }
 
-function sortByTime(a, b) {
-  return dayjs(a.dateFrom).diff(dayjs(a.dateTo)) - dayjs(b.dateFrom).diff(dayjs(b.dateTo));
+function sortByTime(eventA, eventB) {
+  return dayjs(eventA.dateFrom).diff(dayjs(eventA.dateTo)) - dayjs(eventB.dateFrom).diff(dayjs(eventB.dateTo));
 }
 
-function sortByPrice(a, b) {
-  return b.basePrice - a.basePrice;
+function sortByPrice(eventA, eventB) {
+  return eventB.basePrice - eventA.basePrice;
 }
 
 export { sortByDate, sortByTime, sortByPrice };
