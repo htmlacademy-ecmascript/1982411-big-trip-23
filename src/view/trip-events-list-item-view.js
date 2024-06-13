@@ -6,7 +6,7 @@ import {
   getSelectedOffers,
   getCityById
 } from '../utils/event.js';
-import { dateFormat } from '../const.js';
+import { DateFormat } from '../const.js';
 
 
 function createTripEventsListItemOfferTemplate(offers) {
@@ -41,12 +41,12 @@ function createTripEventsListItemTemplate(event, cities, offers) {
   const cityName = getCityById(destination, cities).name;
   const selectedOffers = getSelectedOffers(type, [...selectedOffersIds], offers);
 
-  const startDate = getFormattedEventDate(dateFrom, dateFormat.EVENT_DATE_FORMAT);
-  const startDateForAttribute = getFormattedEventDate(dateFrom, dateFormat.EVENT_DATE_ATTRIBUTE_FORMAT);
-  const startTime = getFormattedEventDate(dateFrom, dateFormat.EVENT_TIME_FORMAT);
-  const startTimeForAttribute = getFormattedEventDate(dateFrom, dateFormat.EVENT_DATETIME_ATTRIBUTE_FORMAT);
-  const endTime = getFormattedEventDate(dateTo, dateFormat.EVENT_TIME_FORMAT);
-  const endTimeForAttribute = getFormattedEventDate(dateTo, dateFormat.EVENT_DATETIME_ATTRIBUTE_FORMAT);
+  const startDate = getFormattedEventDate(dateFrom, DateFormat.EVENT_DATE_FORMAT);
+  const startDateForAttribute = getFormattedEventDate(dateFrom, DateFormat.EVENT_DATE_ATTRIBUTE_FORMAT);
+  const startTime = getFormattedEventDate(dateFrom, DateFormat.EVENT_TIME_FORMAT);
+  const startTimeForAttribute = getFormattedEventDate(dateFrom, DateFormat.EVENT_DATETIME_ATTRIBUTE_FORMAT);
+  const endTime = getFormattedEventDate(dateTo, DateFormat.EVENT_TIME_FORMAT);
+  const endTimeForAttribute = getFormattedEventDate(dateTo, DateFormat.EVENT_DATETIME_ATTRIBUTE_FORMAT);
   const durationTime = getEventDurationTime(dateFrom, dateTo);
 
   const totalPrice = getTotalEventPrice(basePrice, selectedOffers);

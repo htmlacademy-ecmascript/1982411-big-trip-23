@@ -1,7 +1,7 @@
 import SortView from '../view/sort-view.js';
 import TripEventsListView from '../view/trip-events-list-view.js';
 import TripEventsMessageView from '../view/trip-events-message-view.js';
-import { filterType, sortType } from '../const.js';
+import { FilterType, SortType } from '../const.js';
 import EventPresenter from './event-presenter.js';
 import {updateItem} from '../utils/common.js';
 import { sortByDate, sortByTime, sortByPrice } from '../utils/sort.js';
@@ -17,7 +17,7 @@ export default class TripEventsPresenter {
   #cities = [];
   #offers = [];
   #eventPresenters = new Map();
-  #currentSortType = sortType.DEFAULT;
+  #currentSortType = SortType.DEFAULT;
   #sourcedEvents = [];
 
   constructor({tripEventsContainer, eventsModel}) {
@@ -64,7 +64,7 @@ export default class TripEventsPresenter {
 
     this.#renderSort();
     this.#renderTripEventsList();
-    this.#sortTasks(sortType.DEFAULT);
+    this.#sortTasks(SortType.DEFAULT);
     this.#renderTripEvents();
   }
 
@@ -80,20 +80,20 @@ export default class TripEventsPresenter {
 
   #sortTasks(eventSortType) {
     switch (eventSortType) {
-      case sortType.DEFAULT:
+      case SortType.DEFAULT:
         this.#events.sort(sortByDate);
         break;
-      case sortType.TIME_DOWN:
+      case SortType.TIME_DOWN:
         this.#events.sort(sortByTime);
         break;
-      case sortType.PRICE_DOWN:
+      case SortType.PRICE_DOWN:
         this.#events.sort(sortByPrice);
         break;
       default:
         this.#events = [...this.#sourcedEvents];
     }
 
-    this.#currentSortType = sortType;
+    this.#currentSortType = eventSortType;
   }
 
   #renderSort() {
@@ -109,7 +109,7 @@ export default class TripEventsPresenter {
   }
 
   #renderTripEventsMessage() {
-    render(new TripEventsMessageView({ filterType: filterType.EVERYTHING }), this.#tripEventsListComponent.element);
+    render(new TripEventsMessageView({ filterType: FilterType.EVERYTHING }), this.#tripEventsListComponent.element);
   }
 
   #renderTripEvents() {

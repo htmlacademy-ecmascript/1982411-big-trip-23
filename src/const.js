@@ -1,6 +1,6 @@
 const EVENTS_COUNT = 4;
 
-const eventType = [
+const EVENT_TYPES = [
   'Taxi',
   'Bus',
   'Train',
@@ -12,7 +12,7 @@ const eventType = [
   'Restaurant',
 ];
 
-const dateFormat = {
+const DateFormat = {
   EVENT_TIME_FORMAT: 'HH:mm',
   EVENT_DATE_FORMAT: 'MMM DD',
   EVENT_DATE_ATTRIBUTE_FORMAT: 'YYYY-MM-DD',
@@ -48,7 +48,7 @@ const Message = {
   LOADING: 'Loading...'
 };
 
-const filterType = {
+const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
   PRESENT: 'present',
@@ -56,10 +56,10 @@ const filterType = {
 };
 
 const filterEmptyMessage = {
-  [filterType.EVERYTHING]: 'Click New Event to create your first point',
-  [filterType.FUTURE]: 'There are no future events now',
-  [filterType.PRESENT]: 'There are no present events now',
-  [filterType.PAST]: 'There are no past events now',
+  [FilterType.EVERYTHING]: 'Click New Event to create your first point',
+  [FilterType.FUTURE]: 'There are no future events now',
+  [FilterType.PRESENT]: 'There are no present events now',
+  [FilterType.PAST]: 'There are no past events now',
 };
 
 const Mode = {
@@ -67,7 +67,7 @@ const Mode = {
   EDITING: 'EDITING',
 };
 
-const sortType = {
+const SortType = {
   DEFAULT: 'day',
   TIME_DOWN: 'time-down',
   PRICE_DOWN: 'price-down',
@@ -75,4 +75,4 @@ const sortType = {
 
 const PRICE_PATTERN = '[0-9]*';
 
-export { EVENTS_COUNT, eventType, dateFormat, HOURS, MINUTES, newEventInfo, newEventCity, Message, filterType, filterEmptyMessage, Mode, sortType, PRICE_PATTERN };
+export { EVENTS_COUNT, EVENT_TYPES, DateFormat, HOURS, MINUTES, newEventInfo, newEventCity, Message, FilterType, filterEmptyMessage, Mode, SortType, PRICE_PATTERN };
