@@ -1,4 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
+import he from 'he';
 import { getFormattedEventDate, getTotalEventPrice, getSelectedOffers, getCityById, getOffersByEventType } from '../utils/event.js';
 import { DateFormat, EVENT_TYPES, PRICE_PATTERN } from '../const.js';
 import flatpickr from 'flatpickr';
@@ -148,7 +149,7 @@ function createAddAndEditEventFormTemplate(event, cities, allOffers, isEditEvent
         <label class="event__label  event__type-output" for="event-destination-1">
           ${type}
         </label>
-        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${cityName}" list="destination-list-1">
+        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(cityName)}" list="destination-list-1">
         <datalist id="destination-list-1">
         ${createDestinationTemplate(citiesList)}
         </datalist>
