@@ -188,17 +188,19 @@ export default class AddAndEditEventFormView extends AbstractStatefulView {
   #offers = [];
   #handleFormSubmit = null;
   #handleFormClose = null;
+  #handleDeleteClick = null;
   #isEditEventForm = false;
   #datepickerFrom = null;
   #datepickerTo = null;
 
-  constructor({event, cities, offers, onFormSubmit, onFormClose, isEditEventForm}) {
+  constructor({event, cities, offers, onFormSubmit, onFormClose, onDeleteClick, isEditEventForm}) {
     super();
     this._setState(AddAndEditEventFormView.parseEventToState(event));
     this.#cities = cities;
     this.#offers = offers;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleFormClose = onFormClose;
+    this.#handleDeleteClick = onDeleteClick;
     this.#isEditEventForm = isEditEventForm;
 
     this._restoreHandlers();
@@ -251,6 +253,13 @@ export default class AddAndEditEventFormView extends AbstractStatefulView {
       closeFormButton.addEventListener('click', this.#formCloseHandler);
     }
 
+    const deleteEventButton = this.element.querySelector('.event__reset-btn');
+    if (this.#isEditEventForm) {
+      deleteEventButton.addEventListener('click', this.#formDeleteClickHandler);
+    } else {
+      deleteEventButton.addEventListener('click', this.#formCloseHandler);
+    }
+
     this.#setDatepickerFrom();
     this.#setDatepickerTo();
   }
@@ -263,6 +272,11 @@ export default class AddAndEditEventFormView extends AbstractStatefulView {
   #formCloseHandler = (evt) => {
     evt.preventDefault();
     this.#handleFormClose();
+  };
+
+  #formDeleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleDeleteClick(AddAndEditEventFormView.parseStateToEvent(this._state));
   };
 
   #eventDateFromChangeHandler = ([userDateFrom]) => {

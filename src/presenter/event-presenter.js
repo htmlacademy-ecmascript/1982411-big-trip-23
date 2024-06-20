@@ -1,7 +1,9 @@
 import {render, replace, remove} from '../framework/render.js';
 import TripEventsListItemView from '../view/trip-events-list-item-view.js';
 import AddAndEditEventFormView from '../view/add-and-edit-event-form-view.js';
-import { Mode } from '../const.js';
+import { Mode, UserAction, UpdateType } from '../const.js';
+import { isDatesEqual, isPriceEqual } from '../utils/event.js';
+
 
 export default class EventPresenter {
   #eventListContainer = null;
@@ -43,7 +45,8 @@ export default class EventPresenter {
       offers: this.#offers,
       onFormSubmit: this.#handleFormSubmit,
       onFormClose: this.#handleFormClose,
-      isEditEventForm: true
+      onDeleteClick: this.#handleDeleteClick,
+      isEditEventForm: true,
     });
 
     if (prevEventsListItemComponent === null || prevAddAndEditEventFormComponent === null) {
@@ -102,16 +105,35 @@ export default class EventPresenter {
 
   #handleFavoriteClick = () => {
     const changedData = {...this.#event, isFavorite: !this.#event.isFavorite };
-    this.#handleDataChange(changedData);
+    this.#handleDataChange(
+      UserAction.UPDATE_EVENT,
+      UpdateType.MINOR,
+      changedData
+    );
   };
 
-  #handleFormSubmit = (event) => {
-    this.#handleDataChange(event);
+  #handleFormSubmit = (update) => {
+    const isMinorUpdate =
+      !isDatesEqual(this.#event.dateFrom, update.dateFrom) || !isDatesEqual(this.#event.dateTo, update.dateTo) ||
+      !isPriceEqual(this.#event.basePrice, update.basePrice);
+    this.#handleDataChange(
+      UserAction.UPDATE_EVENT,
+      isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
+      update
+    );
     this.#replaceFormToEventItem();
   };
 
   #handleFormClose = () => {
     this.#addAndEditEventFormComponent.reset(this.#event);
     this.#replaceFormToEventItem();
+  };
+
+  #handleDeleteClick = (event) => {
+    this.#handleDataChange(
+      UserAction.DELETE_EVENT,
+      UpdateType.MINOR,
+      event,
+    );
   };
 }

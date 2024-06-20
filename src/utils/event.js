@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import {HOURS, MINUTES } from '../const';
+import {HOURS, MINUTES, newEventCity } from '../const';
 
 function getFormattedEventDate(date, format) {
   return date ? dayjs(date).format(format) : '';
@@ -36,15 +36,15 @@ function getTotalEventPrice(price, offers) {
 }
 
 function isFutureEvent(startDate) {
-  return dayjs().isAfter(startDate, 'D');
+  return dayjs().isBefore(dayjs(startDate));
 }
 
 function isPresentEvent(startDate, endDate) {
-  return (dayjs().isBefore(startDate, 'D') || dayjs().isSame(startDate, 'D')) && (dayjs().isAfter(endDate, 'D') || dayjs().isSame(endDate, 'D'));
+  return dayjs().isAfter(dayjs(startDate)) && dayjs().isBefore(dayjs(endDate));
 }
 
 function isPastEvent(endDate) {
-  return dayjs().isBefore(endDate, 'D');
+  return dayjs().isAfter(dayjs(endDate));
 }
 
 function getOffersByEventType(type, allOffers) {
@@ -58,7 +58,18 @@ function getSelectedOffers(type, offersIds, allOffers) {
 }
 
 function getCityById(id, cities) {
-  return cities.find((city) => city.id === id);
+  if (id) {
+    return cities.find((city) => city.id === id);
+  }
+  return newEventCity;
+}
+
+function isDatesEqual(dateA, dateB) {
+  return (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
+}
+
+function isPriceEqual(priceA, priceB) {
+  return priceA === priceB;
 }
 
 export {
@@ -70,5 +81,7 @@ export {
   isPastEvent,
   getOffersByEventType,
   getSelectedOffers,
-  getCityById
+  getCityById,
+  isDatesEqual,
+  isPriceEqual
 };

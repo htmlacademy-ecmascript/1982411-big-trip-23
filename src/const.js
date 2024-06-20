@@ -75,4 +75,32 @@ const SortType = {
 
 const PRICE_PATTERN = '[0-9]*';
 
-export { EVENTS_COUNT, EVENT_TYPES, DateFormat, HOURS, MINUTES, newEventInfo, newEventCity, Message, FilterType, filterEmptyMessage, Mode, SortType, PRICE_PATTERN };
+const UserAction = {
+  UPDATE_EVENT: 'UPDATE_EVENT',
+  ADD_EVENT: 'ADD_EVENT',
+  DELETE_EVENT: 'DELETE_EVENT',
+};
+
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
+export {
+  EVENTS_COUNT,
+  EVENT_TYPES,
+  DateFormat,
+  HOURS,
+  MINUTES,
+  newEventInfo,
+  newEventCity,
+  Message,
+  FilterType,
+  filterEmptyMessage,
+  Mode,
+  SortType,
+  PRICE_PATTERN,
+  UserAction,
+  UpdateType,
+};
